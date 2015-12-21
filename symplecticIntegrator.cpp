@@ -64,7 +64,7 @@ const bool EXIT_ON_ERROR = 0; //exit if the error is too high
 const double ERROR_THRESHOLD = 0.1; //error threshold
 const int TIME_OFFSET = 0; //start the integrator from a specific timestep
 
-#define LYAPUNOV //compute lyapunov coefficients, not available in implicit 2 (FIXME)
+// #define LYAPUNOV //compute lyapunov coefficients, not available in implicit 2 (FIXME)
 ofstream lyap("out_lyapunov.txt"); //lyapunov output file
 double hlyap = 1.E-7; //trajectories separation
 
