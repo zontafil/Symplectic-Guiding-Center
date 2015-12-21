@@ -34,7 +34,7 @@ using namespace std;
 double h =800; //timestep
 const int MAX_T = 1E6; //number of integration steps
 ofstream out("out_gen.txt");  //output file
-const int NEWTON = 4; //number of implicit newton iterations
+const int NEWTON = 0; //number of implicit newton iterations
 const int PRINT_MULTIPLE = 8; //print out every n timesteps
 const int PRINT_OFFSET = 1; //start printing from a specific step
 const int PRINT_PRECISION = 15; //number of significative digits
@@ -210,7 +210,7 @@ double hlyap = 1.E-7; //trajectories separation
     Vector3d guiding_B(Vector3d x){
       Vector3d ret;
       ret(0) = -B0*x(1)/(q*(R0+x(0)));
-      ret(1) = -((B0 *( R0 *x(0) *(-2.) + x(1)*x(1)))/(2. * q *(R0 + x(0))*(R0 + x(0))));
+      ret(1) = -((B0 *( R0 *x(0) *(-2.) -2.*x(0)*x(0) + x(1)*x(1)))/(2. * q *(R0 + x(0))*(R0 + x(0))));
       ret(2) = -B0*R0/(R0+x(0))*kt;
       return ret;
     } 
