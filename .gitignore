@@ -1,3 +1,5 @@
 a.out
 out_*
 *.sublime*
+bin/
+lib/
