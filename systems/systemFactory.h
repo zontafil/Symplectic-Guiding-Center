@@ -1,17 +1,18 @@
 #ifndef SYSTEMFACTORY_H
 #define SYSTEMFACTORY_H
 
+#include <stdexcept>
 #include "system.h"
 #include "guidingcenter.h"
 
+using namespace std;
+
 namespace Systems{
 	template <int DIM> System<DIM> *systemFactory(std::string const& systemName){
-		System<DIM> *system = new GuidingCenter<DIM>();
-		// if (systemName=="GuidingCenter") system = GuidingCenter<DIM>();
-
-		return system;
+		if (systemName=="GuidingCenter") return new GuidingCenter<DIM>();
+		else throw invalid_argument("Invalid system "+ systemName);
 	}
-	
+
 }
 
 #endif

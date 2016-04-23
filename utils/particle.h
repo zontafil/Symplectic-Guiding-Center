@@ -46,7 +46,14 @@ template <int DIM> Particle<DIM>::Particle(System<DIM>* system){
 // }
 template <int DIM> Particle<DIM>::~Particle(){}
 template <int DIM> void Particle<DIM>::StepForward(){
+	//shift q,p values
+	this->p0 = this->p1;
+	this->q0 = this->q1;
+	this->z0 = this->z1;
+
 	this->z1 = this->_system->StepForward(this->z0);
+	this->q1 = this->z1.q;
+	this->p1 = this->z1.p;
 }
 
 template <int DIM> void Particle<DIM>::initialize(initializationType init_type){

@@ -16,6 +16,8 @@ namespace Systems{
 			virtual PositionPoints<DIM> LegendreLeftInverse(PositionMomentumPoint<DIM> z) = 0;
 			virtual PositionPoints<DIM> LegendreRightInverse(PositionMomentumPoint<DIM> z) = 0;
 
+			virtual double Hamiltonian(PositionMomentumPoint<DIM> z) = 0;
+
 	};
 
 	template <int DIM> System<DIM>::~System(){}
