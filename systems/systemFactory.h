@@ -8,8 +8,12 @@
 using namespace std;
 
 namespace Systems{
-	template <int DIM> System<DIM> *systemFactory(std::string const& systemName){
-		if (systemName=="GuidingCenter") return new GuidingCenter<DIM>();
+	template <int DIM> System<DIM> *systemFactory(std::string const& systemName, Config::Config* config){
+		if (systemName=="GuidingCenter") return new GuidingCenter<DIM>(config);
+		else throw invalid_argument("Invalid system "+ systemName);
+	}
+	template <int DIM> GuidingCenter<DIM> *guidingcenterFactory(std::string const& systemName, Config::Config* config){
+		if (systemName=="GuidingCenter") return new GuidingCenter<DIM>(config);
 		else throw invalid_argument("Invalid system "+ systemName);
 	}
 

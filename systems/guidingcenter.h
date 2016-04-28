@@ -1,47 +1,53 @@
 #ifndef GUIDINGCENTER_H
 #define GUIDINGCENTER_H
 #include "../utils/particleUtils.h"
+#include "../emfields/guidingfield.h"
+#include "../emfields/guidingfieldFactory.h"
 #include "system.h"
+#include <stdexcept>
+#include <iostream>
 
 using namespace ParticleUtils;
+using namespace GuidingFields;
+using namespace std;
 
 namespace Systems{
 
-	template <int DIM> struct EMfield{
-		Matrix<double,DIM,1> B;
-	};
-
 	template <int DIM> class GuidingCenter : public System<DIM>{ 
 		public:
-			GuidingCenter();
+			GuidingCenter(Config::Config* config);
 			~GuidingCenter();
 
-			PositionMomentumPoint<DIM> LegendreLeft(PositionPoints<DIM> q);
-			PositionMomentumPoint<DIM> LegendreRight(PositionPoints<DIM> q);
-			PositionPoints<DIM> LegendreLeftInverse(PositionMomentumPoint<DIM> z);
-			PositionPoints<DIM> LegendreRightInverse(PositionMomentumPoint<DIM> z);
-
 			double Hamiltonian(PositionMomentumPoint<DIM> z);
+			Matrix<double,DIM,1> momentum(PositionPoints<DIM> q);
 
-			// virtual EMfield<DIM> ComputeEMfield(Matrix<double,DIM,1> q) = 0;
+			GuidingFieldConfiguration *fieldconfig;
 
-		private:
-			double mu;
-
-
+			static const double mu = 2.25E-6;
+			static const double hx = 1.E-5;  //step for numerical derivative
 	};
 
-	template <int DIM> GuidingCenter<DIM>::GuidingCenter(){
-		this->mu = 5;		
-	}
-	template <int DIM> PositionMomentumPoint<DIM> GuidingCenter<DIM>::LegendreLeft(PositionPoints<DIM> q){}
-	template <int DIM> PositionMomentumPoint<DIM> GuidingCenter<DIM>::LegendreRight(PositionPoints<DIM> q){}
-	template <int DIM> PositionPoints<DIM> GuidingCenter<DIM>::LegendreLeftInverse(PositionMomentumPoint<DIM> z){}
-	template <int DIM> PositionPoints<DIM> GuidingCenter<DIM>::LegendreRightInverse(PositionMomentumPoint<DIM> z){}
+	template<int DIM> GuidingCenter<DIM>::GuidingCenter(Config::Config* config) : System<DIM>(config){
+		if (DIM!=4) throw invalid_argument("          Invalid Guiding Center dimension: please use 4.");
+		if (config->magneticField=="") throw invalid_argument("Invalid magnetic field");
 
-	template <int DIM> double GuidingCenter<DIM>::Hamiltonian(PositionMomentumPoint<DIM> z){
-		// Matrix<double,DIM,1> B = this->ComputeEMfield(z.q).B;
-		// return (0.5*z.q(3)*z.q(3)+this->mu*B(z.q.head(3)).norm());
+		fieldconfig = guidingfieldFactory(config->magneticField,config);
+	}
+
+	template<int DIM> Matrix<double,DIM,1> GuidingCenter<DIM>::momentum(PositionPoints<DIM> q){
+
+		GuidingField field = fieldconfig->compute(q.q0);
+		Vector4d p;
+		Vector3d x = q.q0.head(3);
+
+		p(3) = 0.;
+		p.head(3) = field.A+q.q0(3)*field.b;
+
+		return p;
+	};
+	template<int DIM> double GuidingCenter<DIM>::Hamiltonian(PositionMomentumPoint<DIM> z){
+		GuidingField field = this->fieldconfig->compute(z.q);
+		return (0.5*z.q(3)*z.q(3)+mu*field.Bnorm);
 	}
 
 }

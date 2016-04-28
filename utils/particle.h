@@ -2,12 +2,14 @@
 #define PARTICLE_H
 
 #include <eigen3/Eigen/Dense>
-#include "../systems/system.h"
+#include "../integrators/integratorFactory.h"
 #include "particleUtils.h"
+#include <iostream>
 
 using namespace Eigen;
-using namespace Systems;
+using namespace Integrators;
 using namespace ParticleUtils;
+using namespace std;
 
 typedef enum {
 	INIT_HAMILTONIAN,
@@ -20,43 +22,62 @@ typedef enum {
 template <int DIM> class Particle
 {
 	public:
-		Particle();
-		Particle(System<DIM>* system);
-		Particle(Matrix<double,DIM,1> q0);
-		~Particle();
+		Particle(Config::Config* config);
+		~Particle(){};
 
 		Matrix<double,DIM,1> q0,q1,p0,p1;
 		PositionMomentumPoint<DIM> z0,z1;
+		PositionPoints<DIM> q;
 		Matrix<double,DIM,1> mom_initial,mom0,mom1;
 
 		double E_initial,E0,E1,Eerr0,Eerr1;
 
 		void initialize(initializationType init_type);
 		void StepForward();
-	private:
-		System<DIM> *_system;
+
+		Integrator<DIM>* integrator;
 };
 
 
-template <int DIM> Particle<DIM>::Particle(System<DIM>* system){
-	this->_system = system;	
+template <int DIM> Particle<DIM>::Particle(Config::Config* config){
+	integrator = integratorFactory<DIM>(config->integrator,config);
 }
-// template <int DIM> Particle<DIM>::Particle(Matrix<double,DIM,1> q0){
-// 	this->q0 = q0;
-// }
-template <int DIM> Particle<DIM>::~Particle(){}
 template <int DIM> void Particle<DIM>::StepForward(){
-	//shift q,p values
-	this->p0 = this->p1;
-	this->q0 = this->q1;
-	this->z0 = this->z1;
+	//shift values
+	p0 = p1;
+	q0 = q1;
+	z0 = z1;
+	E0 = E1;
+	Eerr0 = Eerr1;
+	mom0 = mom1;
 
-	this->z1 = this->_system->StepForward(this->z0);
-	this->q1 = this->z1.q;
-	this->p1 = this->z1.p;
+	z1 = integrator->StepForward(z0);
+	q1 = z1.q;
+	p1 = z1.p;
+	q.q0 = q0;
+	q.q1 = q1;
+
+	E1 = integrator->system->Hamiltonian(z1);
+	Eerr1 = ( E1 - E_initial ) / E_initial;
+	mom1 = integrator->system->momentum(q);
 }
 
 template <int DIM> void Particle<DIM>::initialize(initializationType init_type){
+	if (init_type==INIT_HAMILTONIAN){
+		q.q0 = q0;
+		p0 = integrator->system->momentum(q);
+		z0.p = p0;
+		z0.q = q0;
+		E0 = integrator->system->Hamiltonian(z0);
+		E_initial = E0;
+		mom0 = integrator->system->momentum(q);
+
+		q.q1 = q0;
+		z1.p = p0;
+		z1.q = q0;
+		E1 = E0;
+		mom1 = mom0;
+	}
 }
 
 
