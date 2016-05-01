@@ -1,7 +1,7 @@
 #ifndef SYSTEM_H
 #define SYSTEM_H
 #include "../utils/particleUtils.h"
-#include "../utils/config.h"
+#include "../config.h"
 
 using namespace Particles;
 

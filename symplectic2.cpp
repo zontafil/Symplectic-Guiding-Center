@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 #include "utils/particle.h"
-#include "utils/config.h"
+#include "config.h"
 
 using namespace std;
 using namespace Particles;
@@ -32,6 +32,7 @@ int main(int argc, char* argv[]){
     for (int t=config->time_offset + 1;t<=config->max_t+config->time_offset;t++){
 
         if ((config->print_timestep_mult>0) && (t%config->print_timestep_mult==0)) cout << "Timestep " << t << endl;
+
         particle.StepForward();
 
         if (t==1) {
