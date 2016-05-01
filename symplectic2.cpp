@@ -8,6 +8,7 @@
 #include <eigen3/Eigen/Dense>
 
 #include "utils/particle.h"
+#include "utils/config.h"
 
 //config variables
 const int PRINT_PRECISION = 15; //number of significative digits
@@ -18,7 +19,7 @@ const int PRINT_OFFSET = 1; //start printing from a specific step
 
 using namespace Eigen;
 using namespace std;
-using namespace ParticleUtils;
+using namespace Particles;
 
 void setPrintPrecision(int print_precision);
 
@@ -30,8 +31,8 @@ int main(int argc, char* argv[]){
     setPrintPrecision(PRINT_PRECISION);
 
     Particle<Config::DIM> particle = Particle<Config::DIM>(config);
-    particle.q0 = config->q0;
-    particle.initialize(INIT_HAMILTONIAN);
+    particle.z0 = config->z0;
+    particle.initialize(config->initialization_type);
 
     cout << "time step: " << config->h << endl;
     cout << "Initialization: " << endl;

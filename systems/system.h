@@ -3,7 +3,7 @@
 #include "../utils/particleUtils.h"
 #include "../utils/config.h"
 
-using namespace ParticleUtils;
+using namespace Particles;
 
 namespace Systems{
 	template <int DIM> class System{

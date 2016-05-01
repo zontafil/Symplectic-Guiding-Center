@@ -5,7 +5,7 @@
 
 #include "symplectic.h"
 
-using namespace ParticleUtils;
+using namespace Particles;
 
 namespace Integrators{
 	template <int DIM> class SymplecticExplicit1 : public SymplecticIntegrator<DIM>

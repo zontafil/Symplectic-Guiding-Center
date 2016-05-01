@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <iostream>
 
-using namespace ParticleUtils;
+using namespace Particles;
 using namespace GuidingFields;
 using namespace std;
 

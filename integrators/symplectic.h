@@ -3,7 +3,7 @@
 
 #include "../utils/particleUtils.h"
 
-using namespace ParticleUtils;
+using namespace Particles;
 
 namespace Integrators{
 	template <int DIM> class SymplecticIntegrator : public Integrator<DIM>

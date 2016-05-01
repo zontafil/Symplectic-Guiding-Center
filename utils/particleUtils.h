@@ -5,7 +5,15 @@
 
 using namespace Eigen;
 
-namespace ParticleUtils{
+namespace Particles{
+
+	typedef enum {
+		INIT_HAMILTONIAN,
+		INIT_LAGRANGIAN,
+		INIT_MANUAL_POSITION_MOMENTUM,
+		INIT_MANUAL_MULTISTEP
+	} initializationType;
+
 	template <int DIM> struct PositionPoints{
 		Matrix<double,DIM,1> q0;
 		Matrix<double,DIM,1> q1;
