@@ -3,6 +3,7 @@
 #include <string>
 #include <fstream>
 #include <stdlib.h>
+#include <stdexcept>
 
 #include "utils/particle.h"
 #include "config.h"
@@ -19,6 +20,8 @@ int main(int argc, char* argv[]){
     Particle<Config::DIM> particle = Particle<Config::DIM>(config);
 
     ofstream out(config->outFile.c_str());  //output file
+    if (!out.is_open()) throw invalid_argument("Can't open output file for write");
+
     setPrintPrecision(config->print_precision,out);
 
     cout << "time step: " << config->h << endl;
