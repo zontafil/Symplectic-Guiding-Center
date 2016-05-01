@@ -14,10 +14,8 @@ namespace Integrators{
 			SymplecticExplicit1(Config::Config* config);
 			~SymplecticExplicit1(){};
 
-			PositionMomentumPoint<DIM> LegendreLeft(PositionPoints<DIM> q);
 			PositionMomentumPoint<DIM> LegendreRight(PositionPoints<DIM> q);
 			PositionPoints<DIM> LegendreLeftInverse(PositionMomentumPoint<DIM> z);
-			PositionPoints<DIM> LegendreRightInverse(PositionMomentumPoint<DIM> z);
 
 			//override generic system with a guiding center system.
 			//We need to use guiding center EM fields
@@ -33,9 +31,6 @@ namespace Integrators{
 		h = Integrator<DIM>::h;
 	}
 
-	template <int DIM> PositionMomentumPoint<DIM> SymplecticExplicit1<DIM>::LegendreLeft(PositionPoints<DIM> q){
-			
-	}
 	template <int DIM> PositionMomentumPoint<DIM> SymplecticExplicit1<DIM>::LegendreRight(PositionPoints<DIM> q){
 
 		PositionMomentumPoint<DIM> z;
@@ -107,9 +102,6 @@ namespace Integrators{
 		q.q1(3) = (q.q0(3)+Q(3));
 
 		return q;
-	}
-	template <int DIM> PositionPoints<DIM> SymplecticExplicit1<DIM>::LegendreRightInverse(PositionMomentumPoint<DIM> z){
-
 	}
 
 }

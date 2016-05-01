@@ -14,10 +14,8 @@ namespace Integrators{
 
 			PositionMomentumPoint<DIM> StepForward(PositionMomentumPoint<DIM> z);
 
-			virtual PositionMomentumPoint<DIM> LegendreLeft(PositionPoints<DIM> q) = 0;
 			virtual PositionMomentumPoint<DIM> LegendreRight(PositionPoints<DIM> q) = 0;
 			virtual PositionPoints<DIM> LegendreLeftInverse(PositionMomentumPoint<DIM> z) = 0;
-			virtual PositionPoints<DIM> LegendreRightInverse(PositionMomentumPoint<DIM> z) = 0;
 	
 	};
 

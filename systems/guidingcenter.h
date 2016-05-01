@@ -38,7 +38,6 @@ namespace Systems{
 
 		GuidingField field = fieldconfig->compute(q.q0);
 		Vector4d p;
-		Vector3d x = q.q0.head(3);
 
 		p(3) = 0.;
 		p.head(3) = field.A+q.q0(3)*field.b;
