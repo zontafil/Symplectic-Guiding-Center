@@ -15,11 +15,13 @@ namespace Config{
 			string magneticField, system, integrator;
 			double h;
 
-			double B0,R0,kt,q;
-
 			int max_t, time_offset, orbit_normalize;
 			bool exit_on_error;
 			double error_threshold;
+
+			int print_precision, print_timestep_mult, file_timestep_mult, print_timestep_offset;
+
+			string outFile;
 
 			initializationType initialization_type;
 

@@ -7,26 +7,19 @@
 #include "utils/particle.h"
 #include "utils/config.h"
 
-//config variables
-const int PRINT_PRECISION = 15; //number of significative digits
-ofstream out("out_gen.txt");  //output file
-const int DEBUG_TIMESTEP_MULT = 10000; // 0=DISABLE, print to screen the timestep
-const int PRINT_MULTIPLE = 8; //print out every n timesteps
-const int PRINT_OFFSET = 1; //start printing from a specific step
-
 using namespace std;
 using namespace Particles;
 
-void setPrintPrecision(int print_precision);
+void setPrintPrecision(int print_precision, ofstream& out);
 
 int main(int argc, char* argv[]){
-
-
-    setPrintPrecision(PRINT_PRECISION);
 
     //configuration and create new particle
     Config::Config* config = new Config::Config();
     Particle<Config::DIM> particle = Particle<Config::DIM>(config);
+
+    ofstream out(config->outFile.c_str());  //output file
+    setPrintPrecision(config->print_precision,out);
 
     cout << "time step: " << config->h << endl;
     cout << "Initialization: " << endl;
@@ -38,7 +31,7 @@ int main(int argc, char* argv[]){
     // ******
     for (int t=config->time_offset + 1;t<=config->max_t+config->time_offset;t++){
 
-        if ((DEBUG_TIMESTEP_MULT>0) && (t%DEBUG_TIMESTEP_MULT==0)) cout << "Timestep " << t << endl;
+        if ((config->print_timestep_mult>0) && (t%config->print_timestep_mult==0)) cout << "Timestep " << t << endl;
         particle.StepForward();
 
         if (t==1) {
@@ -53,7 +46,7 @@ int main(int argc, char* argv[]){
         }
 
         //PRINT TO FILE
-        if (((t+PRINT_OFFSET)%PRINT_MULTIPLE)==0){
+        if (((t+config->print_timestep_offset)%config->file_timestep_mult)==0){
             out 
                 << (t-1) << " " 
                 << (t-1)/config->orbit_normalize << " " 
@@ -69,7 +62,7 @@ int main(int argc, char* argv[]){
     return 0;
 }
 
-void setPrintPrecision(int print_precision){
+void setPrintPrecision(int print_precision, ofstream& out){
     cout.setf(std::ios::scientific);
     cout.precision(print_precision);
     out.setf(std::ios::fixed);
