@@ -9,70 +9,95 @@
 using namespace Eigen;
 using namespace Integrators;
 using namespace Particles;
-using namespace std;
 
 namespace Particles{
 
 	template <int DIM> class Particle
 	{
+		private:
+			Matrix<double,DIM,1> q0,q1,p0,p1;
+			void initialize(Config::Config* config);
+				
 		public:
 			Particle(Config::Config* config);
 			~Particle(){};
 
-			Matrix<double,DIM,1> q0,q1,p0,p1;
-			PositionMomentumPoint<DIM> z0,z1;
-			PositionPoints<DIM> q;
 			Matrix<double,DIM,1> mom_initial,mom0,mom1;
-
 			double E_initial,E0,E1,Eerr0,Eerr1;
 
-			void initialize(initializationType init_type);
 			void StepForward();
 
 			Integrator<DIM>* integrator;
-	};
 
+			Matrix<double,DIM,1> get_q0(){return q0;};
+			Matrix<double,DIM,1> get_q1(){return q1;};
+			Matrix<double,DIM,1> get_p0(){return p0;};
+			Matrix<double,DIM,1> get_p1(){return p1;};
+			PositionMomentumPoint<DIM> get_z0();
+			PositionMomentumPoint<DIM> get_z1();
+			PositionPoints<DIM> get_q();
+
+			void set_z0(PositionMomentumPoint<DIM> z0);
+			void set_z1(PositionMomentumPoint<DIM> z1);
+	};
 
 	template <int DIM> Particle<DIM>::Particle(Config::Config* config){
 		integrator = integratorFactory<DIM>(config->integrator,config);
+
+		initialize(config);
 	}
+
+
+	template <int DIM> PositionMomentumPoint<DIM> Particle<DIM>::get_z0(){
+		PositionMomentumPoint<DIM> z0;
+		z0.q = q0;
+		z0.p = p0;
+		return z0;
+	};
+	template <int DIM> PositionMomentumPoint<DIM> Particle<DIM>::get_z1(){
+		PositionMomentumPoint<DIM> z1;
+		z1.q = q1;
+		z1.p = p1;
+		return z1;
+	};
+	template <int DIM> PositionPoints<DIM> Particle<DIM>::get_q(){
+		PositionPoints<DIM> q;
+		q.q0 = q0;
+		q.q1 = q1;
+		return q;
+	}
+	template <int DIM> void Particle<DIM>::set_z0(PositionMomentumPoint<DIM> z0){
+		q0 = z0.q;
+		p0 = z0.p;
+	}
+	template <int DIM> void Particle<DIM>::set_z1(PositionMomentumPoint<DIM> z1){
+		q1 = z1.q;
+		p1 = z1.p;
+	}
+
 	template <int DIM> void Particle<DIM>::StepForward(){
 		//shift values
 		p0 = p1;
 		q0 = q1;
-		z0 = z1;
 		E0 = E1;
 		Eerr0 = Eerr1;
 		mom0 = mom1;
 
-		z1 = integrator->StepForward(z0);
-		q1 = z1.q;
-		p1 = z1.p;
-		q.q0 = q0;
-		q.q1 = q1;
-
+		PositionMomentumPoint<DIM> z1 = integrator->StepForward(get_z0());
+		set_z1(z1);
 		E1 = integrator->system->Hamiltonian(z1);
 		Eerr1 = ( E1 - E_initial ) / E_initial;
-		mom1 = integrator->system->momentum(q);
+		mom1 = integrator->system->momentum(get_q());
 	}
 
-	template <int DIM> void Particle<DIM>::initialize(initializationType init_type){
-		q0 = z0.q;
-		p0 = z0.p;
-		if (init_type==INIT_HAMILTONIAN){
-			q.q0 = q0;
-			p0 = integrator->system->momentum(q);
-			z0.p = p0;
-			z0.q = q0;
-			E0 = integrator->system->Hamiltonian(z0);
-			E_initial = E0;
-			mom0 = integrator->system->momentum(q);
-
-			q.q1 = q0;
-			z1.p = p0;
-			z1.q = q0;
-			E1 = E0;
-			mom1 = mom0;
+	template <int DIM> void Particle<DIM>::initialize(Config::Config* config){
+		q0 = config->z0.q;
+		if (config->initialization_type==INIT_HAMILTONIAN){
+			q1 = q0;
+			p1 = integrator->system->momentum(get_q());
+			E1 = integrator->system->Hamiltonian(get_z1());
+			E_initial = E1;
+			mom1 = integrator->system->momentum(get_q());
 		}
 	}
 

@@ -2,10 +2,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <math.h>
 #include <stdlib.h>
-#include <time.h>
-#include <eigen3/Eigen/Dense>
 
 #include "utils/particle.h"
 #include "utils/config.h"
@@ -17,7 +14,6 @@ const int DEBUG_TIMESTEP_MULT = 10000; // 0=DISABLE, print to screen the timeste
 const int PRINT_MULTIPLE = 8; //print out every n timesteps
 const int PRINT_OFFSET = 1; //start printing from a specific step
 
-using namespace Eigen;
 using namespace std;
 using namespace Particles;
 
@@ -25,19 +21,17 @@ void setPrintPrecision(int print_precision);
 
 int main(int argc, char* argv[]){
 
-    //configuration
-    Config::Config* config = new Config::Config();
 
     setPrintPrecision(PRINT_PRECISION);
 
+    //configuration and create new particle
+    Config::Config* config = new Config::Config();
     Particle<Config::DIM> particle = Particle<Config::DIM>(config);
-    particle.z0 = config->z0;
-    particle.initialize(config->initialization_type);
 
     cout << "time step: " << config->h << endl;
     cout << "Initialization: " << endl;
-    cout << "q0:\t" << particle.q0.transpose() << endl;
-    cout << "p0:\t" << particle.p0.transpose() << endl;
+    cout << "q0:\t" << particle.get_q0().transpose() << endl;
+    cout << "p0:\t" << particle.get_p0().transpose() << endl;
   
     // ******
     //MAIN LOOP
@@ -48,8 +42,8 @@ int main(int argc, char* argv[]){
         particle.StepForward();
 
         if (t==1) {
-          cout << "q1:\t" << particle.q1.transpose() << endl;
-          cout << "p1:\t" << particle.p1.transpose() << endl;
+          cout << "q1:\t" << particle.get_q1().transpose() << endl;
+          cout << "p1:\t" << particle.get_p1().transpose() << endl;
         }
 
         //EXIT IF THE ERROR IS TOO HIGH
@@ -64,9 +58,9 @@ int main(int argc, char* argv[]){
                 << (t-1) << " " 
                 << (t-1)/config->orbit_normalize << " " 
                 << particle.Eerr0 << " " 
-                << particle.q0.transpose() << " " 
-                << particle.p0.transpose() << " " 
-                << (particle.p0-particle.mom0).transpose();
+                << particle.get_q0().transpose() << " " 
+                << particle.get_p0().transpose() << " " 
+                << (particle.get_p0()-particle.mom0).transpose();
             out << endl;
         }
 
