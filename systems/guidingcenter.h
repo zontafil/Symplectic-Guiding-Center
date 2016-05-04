@@ -20,6 +20,7 @@ namespace Systems{
 
 			double Hamiltonian(PositionMomentumPoint<DIM> z);
 			Matrix<double,DIM,1> momentum(PositionPoints<DIM> q);
+			Matrix<double,2*DIM,1> f_eq_motion(Matrix<double,2*DIM,1> z);
 
 			GuidingFieldConfiguration *fieldconfig;
 
@@ -49,6 +50,23 @@ namespace Systems{
 		return (0.5*z.q(3)*z.q(3)+mu*field.Bnorm);
 	}
 
+	template <int DIM> Matrix<double,2*DIM,1> GuidingCenter<DIM>::f_eq_motion(Matrix<double,2*DIM,1> z){
+		Matrix<double,2*DIM,1> f;
+
+		GuidingField field = fieldconfig->compute(z.head(4));
+
+		f.setZero();
+		
+		Matrix<double,3,1> E_dag;
+		double B_dag_par;
+		B_dag_par = field.Bdag.dot(field.b);
+		E_dag = -mu*field.B_grad;
+		
+		f.head(3) = (z(3)* field.Bdag - field.b.cross(E_dag))/B_dag_par;
+		f(3) = field.Bdag.dot(E_dag)/B_dag_par;
+
+		return f;	
+	}
 }
 
 #endif

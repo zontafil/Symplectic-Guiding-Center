@@ -28,6 +28,8 @@ int main(int argc, char* argv[]){
     cout << "Initialization: " << endl;
     cout << "q0:\t" << particle.get_q0().transpose() << endl;
     cout << "p0:\t" << particle.get_p0().transpose() << endl;
+    cout << "q1:\t" << particle.get_q1().transpose() << endl;
+    cout << "p1:\t" << particle.get_p1().transpose() << endl;
   
     // ******
     //MAIN LOOP
@@ -39,8 +41,8 @@ int main(int argc, char* argv[]){
         particle.StepForward();
 
         if (t==1) {
-          cout << "q1:\t" << particle.get_q1().transpose() << endl;
-          cout << "p1:\t" << particle.get_p1().transpose() << endl;
+          cout << "q2:\t" << particle.get_q1().transpose() << endl;
+          cout << "p2:\t" << particle.get_p1().transpose() << endl;
         }
 
         //EXIT IF THE ERROR IS TOO HIGH

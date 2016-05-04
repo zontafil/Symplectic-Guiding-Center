@@ -14,6 +14,7 @@ namespace Systems{
 
 			virtual double Hamiltonian(PositionMomentumPoint<DIM> z) = 0;
 			virtual Matrix<double,DIM,1> momentum(PositionPoints<DIM> q) = 0;
+			virtual Matrix<double,2*DIM,1> f_eq_motion(Matrix<double,2*DIM,1> z) = 0;
 	};
 
 }

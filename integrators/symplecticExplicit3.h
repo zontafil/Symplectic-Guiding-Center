@@ -1,18 +1,18 @@
 // Symplectic integrator for guiding center
 
-#ifndef SYMPLECTICEXPLICIT1_H
-#define SYMPLECTICEXPLICIT1_H
+#ifndef SYMPLECTICEXPLICIT3_H
+#define SYMPLECTICEXPLICIT3_H
 
 #include "symplectic.h"
 
 using namespace Particles;
 
 namespace Integrators{
-	template <int DIM> class SymplecticExplicit1 : public SymplecticIntegrator<DIM>
+	template <int DIM> class SymplecticExplicit3 : public SymplecticIntegrator<DIM>
 	{
 		public:
-			SymplecticExplicit1(Config::Config* config);
-			~SymplecticExplicit1(){};
+			SymplecticExplicit3(Config::Config* config);
+			~SymplecticExplicit3(){};
 
 			PositionMomentumPoint<DIM> LegendreRight(PositionPoints<DIM> q, double h);
 			PositionPoints<DIM> LegendreLeftInverse(PositionMomentumPoint<DIM> z, double h);
@@ -21,15 +21,21 @@ namespace Integrators{
 			//We need to use guiding center EM fields
 			GuidingCenter<DIM>* system;
 
+			// PositionMomentumTwoPoints<DIM> initialize(PositionMomentumTwoPoints<DIM> z, initializationType init);
+
 			double mu;
 	};
 
-	template <int DIM> SymplecticExplicit1<DIM>::SymplecticExplicit1(Config::Config* config) : SymplecticIntegrator<DIM>(config){
+	// template <int DIM> PositionMomentumTwoPoints<DIM> SymplecticExplicit3<DIM>::initialize(PositionMomentumTwoPoints<DIM> z, initializationType init){
+	// 	return SymplecticIntegrator<DIM>::initialize(z,init);
+	// }
+
+	template <int DIM> SymplecticExplicit3<DIM>::SymplecticExplicit3(Config::Config* config) : SymplecticIntegrator<DIM>(config){
 		system = guidingcenterFactory<DIM>(config->system,config);		
 		mu = system->mu;
 	}
 
-	template <int DIM> PositionMomentumPoint<DIM> SymplecticExplicit1<DIM>::LegendreRight(PositionPoints<DIM> q, double h){
+	template <int DIM> PositionMomentumPoint<DIM> SymplecticExplicit3<DIM>::LegendreRight(PositionPoints<DIM> q, double h){
 
 		PositionMomentumPoint<DIM> z;
 
@@ -52,6 +58,12 @@ namespace Integrators{
 		M(3,1)=field.b(1);
 		M(3,2)=field.b(2);
 		M(0,0) = M(1,1) = M(2,2) = M(3,3) = 0;
+
+		//qin modified version (explicit 3)
+		M(3,3) = h;
+		M(0,3) = M(1,3) = M(2,3) = 0;
+		for (int i=0;i<=2;i++) for (int j=0;j<=2;j++) M(i,j) += 2.*field.b(i)*field.b(j)/h;
+
 		M/=2.;
 
 		Vector4d dq = q.q1 - q.q0;
@@ -63,7 +75,7 @@ namespace Integrators{
 
 		return z;
 	}
-	template <int DIM> PositionPoints<DIM> SymplecticExplicit1<DIM>::LegendreLeftInverse(PositionMomentumPoint<DIM> z, double h){
+	template <int DIM> PositionPoints<DIM> SymplecticExplicit3<DIM>::LegendreLeftInverse(PositionMomentumPoint<DIM> z, double h){
 
 		PositionPoints<DIM> q;
 
@@ -86,6 +98,11 @@ namespace Integrators{
 		M(3,1)=field.b(1);
 		M(3,2)=field.b(2);
 		M(0,0) = M(1,1) = M(2,2) = M(3,3) = 0;
+
+		//qin modified version (explicit 3)
+		M(3,3) = -h;
+		M(0,3) = M(1,3) = M(2,3) = 0;
+		for (int i=0;i<=2;i++) for (int j=0;j<=2;j++) M(i,j) -= 2.*field.b(i)*field.b(j)/h;
 
 		M/=2.;
 

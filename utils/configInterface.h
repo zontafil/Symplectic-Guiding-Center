@@ -12,8 +12,9 @@ namespace Config{
 	class ConfigInterface
 	{
 		public:
-			string magneticField, system, integrator;
+			string magneticField, system, integrator, auxiliary_integrator;
 			double h;
+			int init_steps;
 
 			int max_t, time_offset, orbit_normalize;
 			bool exit_on_error;
