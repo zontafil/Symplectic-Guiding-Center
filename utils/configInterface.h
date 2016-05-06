@@ -26,6 +26,11 @@ namespace Config{
 
 			initializationType initialization_type;
 
+			//force free specific
+			bool forcefree_pert;
+			double forcefree_kff; //perturbation magnitude
+			double forcefree_a;
+
 			ConfigInterface(): h(0) {};
 			~ConfigInterface(){};
 	};
