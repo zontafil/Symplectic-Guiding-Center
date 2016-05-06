@@ -11,6 +11,8 @@ namespace GuidingFields{
 
 	class GuidingFieldConfiguration
 	{
+		private:
+			Vector3d B_grad(Vector3d x);
 		public:
 			GuidingFieldConfiguration(Config::Config* config): mu(2.25E-6), hx(1.E-5){};
 			~GuidingFieldConfiguration(){};
@@ -19,9 +21,40 @@ namespace GuidingFields{
 			virtual Vector3d guiding_A(Vector3d x) = 0;
 			virtual Vector3d guiding_B(Vector3d x) = 0;
 
+			Matrix<double,3,3> B_hessian(Vector3d x);
+
 			const double mu;
 			const double hx;  //step for numerical derivative
 	};
+
+
+	Vector3d GuidingFieldConfiguration::B_grad(Vector3d x){
+		Vector3d dx(hx,hx,hx); //dx := (dx,dy,dz)
+		Vector3d ret;
+		Vector3d x0,x1;
+		for (int j=0;j<3;j++){
+		  x0 = x1 = x;
+		  x0(j)-=dx(j);
+		  x1(j)+=dx(j);
+		  ret(j) = 0.5*(guiding_B(x1).norm() - guiding_B(x0).norm())/dx(j);
+		}
+		return ret;
+	}
+	
+	Matrix<double,3,3> GuidingFieldConfiguration::B_hessian(Vector3d x){
+		// COMPUTE B_HESSIAN
+		Vector3d dx(hx,hx,hx); //dx := (dx,dy,dz)
+		Matrix<double,3,3> ret;
+		Vector3d x0,x1;
+		for (int j=0;j<3;j++){
+		  x0 = x1 = x;
+		  x0(j)-=dx(j);
+		  x1(j)+=dx(j);
+		  ret.col(j) = 0.5*(B_grad(x1) - B_grad(x0))/dx(j);
+		}
+
+		return ret;
+	}
 
 	GuidingField GuidingFieldConfiguration::compute(Matrix<double,4,1> z){
 		//TODO: implement phi
@@ -55,7 +88,7 @@ namespace GuidingFields{
 		  field.B_grad(j) = 0.5*(B1.norm() - B0.norm())/dx(j);
 		  b_jac.col(j) = 0.5*(B1.normalized() - B0.normalized())/dx(j);
 		}
-		
+
 		//COMPUTE B_dagger
 		field.Bdag = field.B;
 		field.Bdag(0) += u*(b_jac(2,1)-b_jac(1,2));

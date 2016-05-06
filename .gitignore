@@ -4,3 +4,4 @@ out_*
 bin/
 lib/
 config.h
+out/

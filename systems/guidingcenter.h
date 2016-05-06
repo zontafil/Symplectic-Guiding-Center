@@ -30,7 +30,6 @@ namespace Systems{
 
 	template<int DIM> GuidingCenter<DIM>::GuidingCenter(Config::Config* config) : System<DIM>(config){
 		if (DIM!=4) throw invalid_argument("          Invalid Guiding Center dimension: please use 4.");
-		if (config->magneticField=="") throw invalid_argument("Invalid magnetic field");
 
 		fieldconfig = guidingfieldFactory(config->magneticField,config);
 	}
