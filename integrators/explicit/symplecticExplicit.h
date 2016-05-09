@@ -1,16 +1,17 @@
 #ifndef SYMPLECTIC_H
 #define SYMPLECTIC_H
 
-#include "../utils/particleUtils.h"
+#include "../../utils/particleUtils.h"
+#include "../explicitIntegrator.h"
 
 using namespace Particles;
 
 namespace Integrators{
-	template <int DIM> class SymplecticIntegrator : public Integrator<DIM>
+	template <int DIM> class SymplecticExplicitIntegrator : public ExplicitIntegrator<DIM>
 	{
 		public:
-			SymplecticIntegrator(Config::Config* config): Integrator<DIM>(config){};
-			~SymplecticIntegrator(){};
+			SymplecticExplicitIntegrator(Config::Config* config): ExplicitIntegrator<DIM>(config){};
+			~SymplecticExplicitIntegrator(){};
 
 			PositionMomentumPoint<DIM> StepForward(PositionMomentumPoint<DIM> z, double h);
 
@@ -21,7 +22,7 @@ namespace Integrators{
 	
 	};
 
-	template <int DIM> PositionMomentumTwoPoints<DIM> SymplecticIntegrator<DIM>::initialize(PositionMomentumTwoPoints<DIM> z, initializationType init, double h){
+	template <int DIM> PositionMomentumTwoPoints<DIM> SymplecticExplicitIntegrator<DIM>::initialize(PositionMomentumTwoPoints<DIM> z, initializationType init, double h){
 		if (init==INIT_MANUAL_MULTISTEP){
 			PositionPoints<DIM> q;
 			q.q0 = z.q0;
@@ -35,7 +36,7 @@ namespace Integrators{
 		else return Integrator<DIM>::initialize(z,init, h);
 	}
 
-	template <int DIM> PositionMomentumPoint<DIM> SymplecticIntegrator<DIM>::StepForward(PositionMomentumPoint<DIM> z0, double h){
+	template <int DIM> PositionMomentumPoint<DIM> SymplecticExplicitIntegrator<DIM>::StepForward(PositionMomentumPoint<DIM> z0, double h){
 		return LegendreRight(LegendreLeftInverse(z0, h), h);
 	}
 

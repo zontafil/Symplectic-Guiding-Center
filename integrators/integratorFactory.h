@@ -3,11 +3,11 @@
 
 #include <stdexcept>
 #include "integrator.h"
-#include "symplecticExplicit1.h"
-#include "symplecticExplicit2.h"
-#include "symplecticExplicit3.h"
-#include "symplecticExplicit4.h"
-#include "RK4.h"
+#include "explicit/symplecticExplicit1.h"
+#include "explicit/symplecticExplicit2.h"
+#include "explicit/symplecticExplicit3.h"
+#include "explicit/symplecticExplicit4.h"
+#include "explicit/RK4.h"
 
 using namespace std;
 

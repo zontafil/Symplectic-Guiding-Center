@@ -1,18 +1,18 @@
 // Symplectic integrator for guiding center
 
-#ifndef SYMPLECTICEXPLICIT4_H
-#define SYMPLECTICEXPLICIT4_H
+#ifndef SYMPLECTICEXPLICIT1_H
+#define SYMPLECTICEXPLICIT1_H
 
-#include "symplectic.h"
+#include "symplecticExplicit.h"
 
 using namespace Particles;
 
 namespace Integrators{
-	template <int DIM> class SymplecticExplicit4 : public SymplecticIntegrator<DIM>
+	template <int DIM> class SymplecticExplicit1 : public SymplecticExplicitIntegrator<DIM>
 	{
 		public:
-			SymplecticExplicit4(Config::Config* config);
-			~SymplecticExplicit4(){};
+			SymplecticExplicit1(Config::Config* config);
+			~SymplecticExplicit1(){};
 
 			PositionMomentumPoint<DIM> LegendreRight(PositionPoints<DIM> q, double h);
 			PositionPoints<DIM> LegendreLeftInverse(PositionMomentumPoint<DIM> z, double h);
@@ -24,12 +24,12 @@ namespace Integrators{
 			double mu;
 	};
 
-	template <int DIM> SymplecticExplicit4<DIM>::SymplecticExplicit4(Config::Config* config) : SymplecticIntegrator<DIM>(config){
+	template <int DIM> SymplecticExplicit1<DIM>::SymplecticExplicit1(Config::Config* config) : SymplecticExplicitIntegrator<DIM>(config){
 		system = guidingcenterFactory<DIM>(config->system,config);		
 		mu = system->mu;
 	}
 
-	template <int DIM> PositionMomentumPoint<DIM> SymplecticExplicit4<DIM>::LegendreRight(PositionPoints<DIM> q, double h){
+	template <int DIM> PositionMomentumPoint<DIM> SymplecticExplicit1<DIM>::LegendreRight(PositionPoints<DIM> q, double h){
 
 		PositionMomentumPoint<DIM> z;
 
@@ -52,12 +52,6 @@ namespace Integrators{
 		M(3,1)=field.b(1);
 		M(3,2)=field.b(2);
 		M(0,0) = M(1,1) = M(2,2) = M(3,3) = 0;
-
-		Matrix4d grad2h = Matrix4d::Zero();
-		grad2h.block<3,3>(0,0) = mu*system->fieldconfig->B_hessian(q.q1.head(3));
-		grad2h(3,3) = 1.;
-		M += h/2.*grad2h;
-
 		M/=2.;
 
 		Vector4d dq = q.q1 - q.q0;
@@ -69,11 +63,11 @@ namespace Integrators{
 
 		return z;
 	}
-	template <int DIM> PositionPoints<DIM> SymplecticExplicit4<DIM>::LegendreLeftInverse(PositionMomentumPoint<DIM> z, double h){
+	template <int DIM> PositionPoints<DIM> SymplecticExplicit1<DIM>::LegendreLeftInverse(PositionMomentumPoint<DIM> z, double h){
 
 		PositionPoints<DIM> q;
 
-		GuidingField field = system->fieldconfig->compute(z.q); 
+		GuidingField field = system->fieldconfig->compute(z.q);
 		  
 		Matrix4d M;
 		Vector4d W,Q;
@@ -92,11 +86,6 @@ namespace Integrators{
 		M(3,1)=field.b(1);
 		M(3,2)=field.b(2);
 		M(0,0) = M(1,1) = M(2,2) = M(3,3) = 0;
-
-		Matrix4d grad2h = Matrix4d::Zero();
-		grad2h.block<3,3>(0,0) = mu*system->fieldconfig->B_hessian(z.q.head(3));
-		grad2h(3,3) = 1.;
-		M -= h/2.*grad2h;
 
 		M/=2.;
 

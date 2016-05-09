@@ -1,17 +1,17 @@
 #ifndef RK4_H
 #define RK4_H
 
-#include "integrator.h"
-#include "../config.h"
-#include "../utils/particleUtils.h"
+#include "../explicitIntegrator.h"
+#include "../../config.h"
+#include "../../utils/particleUtils.h"
 
 using namespace Particles;
 
 namespace Integrators{
-	template <int DIM> class RK4 : public Integrator<DIM>{
+	template <int DIM> class RK4 : public ExplicitIntegrator<DIM>{
 		public:
-			RK4(Config::Config* config) : Integrator<DIM>::Integrator(config){
-				system = Integrator<DIM>::system;
+			RK4(Config::Config* config) : ExplicitIntegrator<DIM>::ExplicitIntegrator(config){
+				system = ExplicitIntegrator<DIM>::system;
 			};
 			~RK4();
 
