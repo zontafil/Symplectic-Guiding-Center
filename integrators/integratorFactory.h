@@ -9,6 +9,8 @@
 #include "explicit/symplecticExplicit4.h"
 #include "explicit/RK4.h"
 
+#include "implicit/symplecticImplicit1.h"
+
 using namespace std;
 
 namespace Integrators{
@@ -18,6 +20,9 @@ namespace Integrators{
 		else if (integratorName=="SymplecticExplicit3") return new SymplecticExplicit3<DIM>(config);
 		else if (integratorName=="SymplecticExplicit4") return new SymplecticExplicit4<DIM>(config);
 		else if (integratorName=="RK4") return new RK4<DIM>(config);
+
+		else if (integratorName=="SymplecticImplicit1") return new SymplecticImplicit1<DIM>(config);
+
 		else throw invalid_argument("Invalid integrator "+ integratorName);
 	}
 

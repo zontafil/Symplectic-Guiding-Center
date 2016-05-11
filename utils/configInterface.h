@@ -12,9 +12,10 @@ namespace Config{
 	class ConfigInterface
 	{
 		public:
-			string magneticField, system, integrator, auxiliary_integrator;
+			string magneticField, system, integrator, auxiliary_integrator, first_guess_integrator;
 			double h;
 			int init_steps;
+			int implicit_iterations;
 
 			int max_t, time_offset, orbit_normalize;
 			bool exit_on_error;
@@ -25,6 +26,9 @@ namespace Config{
 			string outFile;
 
 			initializationType initialization_type;
+
+			//guiding center specific
+			double mu;
 
 			//force free specific
 			bool forcefree_pert;
