@@ -58,6 +58,7 @@ namespace GuidingFields{
 
 	GuidingField GuidingFieldConfiguration::compute(Matrix<double,4,1> z){
 		//TODO: implement phi
+
 		BOOST_LOG_TRIVIAL(trace) << "Computing Magnetic field";
 		BOOST_LOG_TRIVIAL(trace) << std::scientific << "z:\t\t" << z.transpose();
 		
@@ -71,24 +72,22 @@ namespace GuidingFields{
 		field.b = field.B.normalized();
 		field.Adag = field.A + u*field.b;
 		
-		//COMPUTE SPACESTEP
 		Vector3d B0,x0,x1,B1;
-		Vector3d dx(hx,hx,hx); //dx := (dx,dy,dz)
 
 		//COMPUTE GRADIENT(B),GRADIENT(phi),JAC(A_dagger)
 		Matrix3d A_jac;
 		Matrix3d b_jac;
 		for (int j=0;j<3;j++){
 		  x0 = x1 = x;
-		  x0(j)-=dx(j);
-		  x1(j)+=dx(j);
+		  x0(j)-=hx;
+		  x1(j)+=hx;
 		  B0 = guiding_B(x0);
 		  B1 = guiding_B(x1);
 		  
-		  field.Adag_jac.col(j) = 0.5*(guiding_A(x1) + u*B1.normalized() - guiding_A(x0)-u*B0.normalized())/dx(j);
-		  A_jac.col(j) = 0.5*(guiding_A(x1) - guiding_A(x0))/dx(j);
-		  field.B_grad(j) = 0.5*(B1.norm() - B0.norm())/dx(j);
-		  b_jac.col(j) = 0.5*(B1.normalized() - B0.normalized())/dx(j);
+		  field.Adag_jac.col(j) = 0.5*(guiding_A(x1) + u*B1.normalized() - guiding_A(x0)-u*B0.normalized())/hx;
+		  A_jac.col(j) = 0.5*(guiding_A(x1) - guiding_A(x0))/hx;
+		  field.B_grad(j) = 0.5*(B1.norm() - B0.norm())/hx;
+		  b_jac.col(j) = 0.5*(B1.normalized() - B0.normalized())/hx;
 		}
 
 		//COMPUTE B_dagger
@@ -99,6 +98,7 @@ namespace GuidingFields{
 
 		BOOST_LOG_TRIVIAL(trace) << std::scientific << "B:\t\t" << field.B.transpose();
 		BOOST_LOG_TRIVIAL(trace) << std::scientific << "A:\t\t" << field.A.transpose();
+
 		return field;
 	}
 }
