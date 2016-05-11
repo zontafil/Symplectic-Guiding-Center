@@ -58,6 +58,8 @@ namespace GuidingFields{
 
 	GuidingField GuidingFieldConfiguration::compute(Matrix<double,4,1> z){
 		//TODO: implement phi
+		BOOST_LOG_TRIVIAL(trace) << "Computing Magnetic field";
+		BOOST_LOG_TRIVIAL(trace) << std::scientific << "z:\t\t" << z.transpose();
 		
 		GuidingField field;
 		Vector3d x = z.head(3);
@@ -95,6 +97,8 @@ namespace GuidingFields{
 		field.Bdag(1) += u*(b_jac(0,2)-b_jac(2,0));
 		field.Bdag(2) += u*(b_jac(1,0)-b_jac(0,1));		
 
+		BOOST_LOG_TRIVIAL(trace) << std::scientific << "B:\t\t" << field.B.transpose();
+		BOOST_LOG_TRIVIAL(trace) << std::scientific << "A:\t\t" << field.A.transpose();
 		return field;
 	}
 }

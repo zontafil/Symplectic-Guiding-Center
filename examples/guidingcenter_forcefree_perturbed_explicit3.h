@@ -47,6 +47,8 @@ namespace Config{
 				forcefree_a = 3.;
 				forcefree_pert = true;
 
+				debug_level = "info"; //set to info(default)/debug/trace
+
 			};
 			~Config(){};
 

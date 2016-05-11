@@ -41,6 +41,8 @@ namespace Config{
 				file_timestep_mult = 8; //print to file every n timesteps
 				print_timestep_offset = 1; //print to screen initial offset
 
+				debug_level = "info"; //set to info(default)/debug/trace
+
 			};
 			~Config(){};
 

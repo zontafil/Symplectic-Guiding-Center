@@ -31,7 +31,9 @@ namespace Config{
 			double forcefree_kff; //perturbation magnitude
 			double forcefree_a;
 
-			ConfigInterface(): h(0) {};
+			string debug_level;
+
+			ConfigInterface(): h(0), debug_level("info") {};
 			~ConfigInterface(){};
 	};
 

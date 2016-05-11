@@ -4,6 +4,9 @@
 #include <fstream>
 #include <stdlib.h>
 #include <stdexcept>
+#include <boost/log/trivial.hpp>
+#include <boost/log/utility/setup/console.hpp>
+#define BOOST_LOG_DYN_LINK 1
 
 #include "utils/particle.h"
 #include "config.h"
@@ -13,12 +16,19 @@ using namespace Particles;
 
 void setPrintPrecision(int print_precision, ofstream& out);
 void printToFile(int t,Config::Config* config, Particle<Config::DIM>* particle, ofstream& out);
+void setDebugLevel(Config::Config* config);
 
 int main(int argc, char* argv[]){
 
-    //configuration and create new particle
+
+    //configuration and output file
     ofstream out("out/out.txt");
     Config::Config* config = new Config::Config();
+
+    //set debug level
+    setDebugLevel(config);
+
+    //create a particle
     Particle<Config::DIM>* particle = new Particle<Config::DIM>(config);
 
     // ofstream out(config->outFile.c_str());  //output file
@@ -79,4 +89,10 @@ void printToFile(int t,Config::Config* config, Particle<Config::DIM>* particle, 
         << (particle->get_p1()-particle->mom1).transpose();
     out << endl;
 
+}
+
+void setDebugLevel(Config::Config* config){
+   boost::log::add_console_log(std::cout, boost::log::keywords::format = ">> %Message%");
+   if (config->debug_level=="debug")  boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::debug);
+   else boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::info);
 }
