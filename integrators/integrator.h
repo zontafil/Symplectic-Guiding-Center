@@ -14,23 +14,16 @@ namespace Integrators{
 			Integrator(Config::Config* config);
 			~Integrator(){};
 			
-			virtual PositionMomentumPoint<DIM> StepForward(PositionMomentumPoint<DIM> z, double h) = 0;
+			virtual Matrix<double,DIM,1> StepForward(Matrix<double,DIM,1> z, double h) = 0;
 
 			System<DIM>* system;
 
-			virtual PositionMomentumTwoPoints<DIM> initialize(PositionMomentumTwoPoints<DIM> z, initializationType init, double h);
+			virtual PhaseSpacePoints<DIM> initialize(PhaseSpacePoints<DIM> z, initializationType init, double h);
 	};
 
-	template <int DIM> PositionMomentumTwoPoints<DIM> Integrator<DIM>::initialize(PositionMomentumTwoPoints<DIM> z, initializationType init, double h){
-		if (init==INIT_MANUAL_POSITION_MOMENTUM) return z;
-		else if (init==INIT_HAMILTONIAN){
-			PositionPoints<DIM> q;
-			q.q0 = z.q0;
-			q.q1 = z.q1;
-
-			z.q1 = z.q0;
-			z.p1 = system->momentum(q);
-
+	template <int DIM> PhaseSpacePoints<DIM> Integrator<DIM>::initialize(PhaseSpacePoints<DIM> z, initializationType init, double h){
+		if (init==INIT_MANUAL){
+			z.z1 = z.z0;
 			return z;
 		}
 		else throw invalid_argument("invalid initialization type");

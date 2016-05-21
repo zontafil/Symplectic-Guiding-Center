@@ -3,13 +3,15 @@
 
 #include <stdexcept>
 #include "integrator.h"
-#include "explicit/symplecticExplicit1.h"
-#include "explicit/symplecticExplicit2.h"
-#include "explicit/symplecticExplicit3.h"
-#include "explicit/symplecticExplicit4.h"
+#include "explicit/guidingCenter/symplecticExplicit1.h"
+#include "explicit/guidingCenter/symplecticExplicit2.h"
+#include "explicit/guidingCenter/symplecticExplicit3.h"
+#include "explicit/guidingCenter/symplecticExplicit4.h"
 #include "explicit/RK4.h"
 
-#include "implicit/symplecticImplicit1.h"
+#include "implicit/guidingCenter/symplecticImplicit1.h"
+#include "implicit/guidingCenter/symplecticSemiexplicitQin.h"
+#include "implicit/variationalMidpoint.h"
 
 using namespace std;
 
@@ -22,8 +24,10 @@ namespace Integrators{
 		else if (integratorName=="RK4") return new RK4<DIM>(config);
 
 		else if (integratorName=="SymplecticImplicit1") return new SymplecticImplicit1<DIM>(config);
+		else if (integratorName=="symplecticSemiexplicitQin") return new SemiexplicitQin<DIM>(config);
+		else if (integratorName=="VariationalMidpoint") return new VariationalMidpoint<DIM>(config);
 
-		else throw invalid_argument("Invalid integrator "+ integratorName);
+		throw invalid_argument("Invalid integrator "+ integratorName);
 	}
 
 }

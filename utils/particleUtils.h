@@ -10,27 +10,33 @@ namespace Particles{
 	typedef enum {
 		INIT_HAMILTONIAN,
 		INIT_LAGRANGIAN,
-		INIT_MANUAL_POSITION_MOMENTUM,
+		INIT_MANUAL,
 		INIT_MANUAL_MULTISTEP
 	} initializationType;
 
+	template <int DIM> struct PhaseSpacePoints{
+		Matrix<double,DIM,1> z0;
+		Matrix<double,DIM,1> z1;
+	};
+
+	//variables for canonical hamiltonian systems
 	template <int DIM> struct PositionPoints{
-		Matrix<double,DIM,1> q0;
-		Matrix<double,DIM,1> q1;
+		Matrix<double,DIM/2,1> q0;
+		Matrix<double,DIM/2,1> q1;
 	};
 	template <int DIM> struct PositionMomentumPoint{
-		Matrix<double,DIM,1> q;
-		Matrix<double,DIM,1> p;
+		Matrix<double,DIM/2,1> q;
+		Matrix<double,DIM/2,1> p;
 	};
 	template <int DIM> struct PositionMomentumTwoPoints{
-		Matrix<double,DIM,1> q0;
-		Matrix<double,DIM,1> p0;
-		Matrix<double,DIM,1> q1;
-		Matrix<double,DIM,1> p1;
+		Matrix<double,DIM/2,1> q0;
+		Matrix<double,DIM/2,1> p0;
+		Matrix<double,DIM/2,1> q1;
+		Matrix<double,DIM/2,1> p1;
 	};
 	template <int DIM> struct MomentumPoints{
-		Matrix<double,DIM,1> p0;
-		Matrix<double,DIM,1> p1;
+		Matrix<double,DIM/2,1> p0;
+		Matrix<double,DIM/2,1> p1;
 	};
 
 };

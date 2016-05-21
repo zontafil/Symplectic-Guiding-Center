@@ -4,6 +4,7 @@
 #include <fstream>
 #include <stdlib.h>
 #include <stdexcept>
+#include <vector>
 #include <boost/log/trivial.hpp>
 #include <boost/log/utility/setup/console.hpp>
 #define BOOST_LOG_DYN_LINK 1
@@ -38,10 +39,13 @@ int main(int argc, char* argv[]){
 
     cout << "time step: " << config->h << endl;
     cout << "Initialization: " << endl;
-    cout << "q_init:\t" << particle->get_q0().transpose() << endl;
-    cout << "p_init:\t" << particle->get_p0().transpose() << endl;
-    cout << "q0:\t" << particle->get_q1().transpose() << endl;
-    cout << "p0:\t" << particle->get_p1().transpose() << endl;
+    cout << "z_init:\t" << particle->z0.transpose() << endl;
+    cout << "z0:\t" << particle->z1.transpose() << endl;
+    cout << "conserved qnts: ";
+
+    for (unsigned int i=0; i<particle->conservedQuantities1->size(); i++) cout << particle->conservedQuantities1->at(i) << " ";
+    cout << endl;        
+
     printToFile(0,config,particle, out);
   
     // ******
@@ -53,10 +57,7 @@ int main(int argc, char* argv[]){
 
         particle->StepForward();
 
-        if (t==1) {
-          cout << "q1:\t" << particle->get_q1().transpose() << endl;
-          cout << "p1:\t" << particle->get_p1().transpose() << endl;
-        }
+        if (t==1) cout << "z1:\t" << particle->z1.transpose() << endl;
 
         //EXIT IF THE ERROR IS TOO HIGH
         if ((config->exit_on_error) && (abs(particle->Eerr0)>config->error_threshold)){
@@ -83,10 +84,12 @@ void printToFile(int t,Config::Config* config, Particle<Config::DIM>* particle, 
     out 
         << (t) << " " 
         << (t)/config->orbit_normalize << " " 
-        << particle->Eerr1 << " " 
-        << particle->get_q1().transpose() << " " 
-        << particle->get_p1().transpose() << " " 
-        << (particle->get_p1()-particle->mom1).transpose();
+        << particle->z1.transpose() << " ";
+
+    vector<double>* conservedQuantitiesError = particle->conservedQuantities_err1;
+    for (unsigned int i=0; i< conservedQuantitiesError->size(); i++){
+        out << conservedQuantitiesError->at(i) << " ";
+    }
     out << endl;
 
 }

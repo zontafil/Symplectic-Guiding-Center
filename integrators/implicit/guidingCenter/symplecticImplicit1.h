@@ -3,12 +3,12 @@
 #ifndef SYMPLECTICIMPLICIT1_H
 #define SYMPLECTICIMPLICIT1_H
 
-#include "symplecticImplicit.h"
+#include "../../variationalImplicit.h"
 
 using namespace Particles;
 
 namespace Integrators{
-	template <int DIM> class SymplecticImplicit1 : public SymplecticImplicitIntegrator<DIM>
+	template <int DIM> class SymplecticImplicit1 : public VariationalImplicit<DIM>
 	{
 		public:
 			SymplecticImplicit1(Config::Config* config);
@@ -24,7 +24,7 @@ namespace Integrators{
 			double mu;
 	};
 
-	template <int DIM> SymplecticImplicit1<DIM>::SymplecticImplicit1(Config::Config* config) : SymplecticImplicitIntegrator<DIM>(config){
+	template <int DIM> SymplecticImplicit1<DIM>::SymplecticImplicit1(Config::Config* config) : VariationalImplicit<DIM>(config){
 		system = guidingcenterFactory<DIM>(config->system,config);		
 		mu = config->mu;
 	}
