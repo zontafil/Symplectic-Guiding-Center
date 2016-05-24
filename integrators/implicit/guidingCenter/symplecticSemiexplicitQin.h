@@ -11,6 +11,7 @@ namespace Integrators{
 			const double mu;
 		public:
 			SemiexplicitQin(Config::Config* config): VariationalDiscreteLagrangian<DIM>(config), mu(config->mu){
+				if (DIM!=8) throw invalid_argument("Invalid dimension for symplectic implicit 1: please use 8.");
 				system = guidingcenterFactory<DIM>(config->system,config);		
 			}
 			~SemiexplicitQin(){};

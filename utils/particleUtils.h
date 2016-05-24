@@ -11,7 +11,8 @@ namespace Particles{
 		INIT_HAMILTONIAN,
 		INIT_LAGRANGIAN,
 		INIT_MANUAL,
-		INIT_MANUAL_MULTISTEP
+		INIT_MANUAL_MULTISTEP,
+		INIT_GUIDINGCENTER3D
 	} initializationType;
 
 	template <int DIM> struct PhaseSpacePoints{

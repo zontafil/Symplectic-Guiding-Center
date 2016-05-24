@@ -4,6 +4,7 @@
 #define SYMPLECTICIMPLICIT1_H
 
 #include "../../variationalImplicit.h"
+#include <stdexcept>
 
 using namespace Particles;
 
@@ -25,16 +26,16 @@ namespace Integrators{
 	};
 
 	template <int DIM> SymplecticImplicit1<DIM>::SymplecticImplicit1(Config::Config* config) : VariationalImplicit<DIM>(config){
+		if (DIM!=8) throw invalid_argument("Invalid dimension for symplectic implicit 1: please use 8.");
 		system = guidingcenterFactory<DIM>(config->system,config);		
 		mu = config->mu;
 	}
 
 	template <int DIM> PositionMomentumPoint<DIM> SymplecticImplicit1<DIM>::LegendreRight(PositionPoints<DIM> q, double h){
 
-
 		PositionMomentumPoint<DIM> z;
 
-		Vector4d zm = ( q.q0 + q.q1) /2.;
+		Matrix<double,DIM/2,1> zm = ( q.q0 + q.q1) /2.;
 		Vector3d xd = q.q1.head(3) - q.q0.head(3);
 		double um = ( q.q0(3) + q.q1(3) ) /2.;
 
@@ -55,7 +56,7 @@ namespace Integrators{
 
 		PositionMomentumPoint<DIM> z;
 
-		Vector4d qm = ( q.q0 + q.q1) /2.;
+		Matrix<double,DIM/2,1> qm = ( q.q0 + q.q1) /2.;
 		Vector3d xd = q.q1.head(3) - q.q0.head(3);
 		double um = ( q.q0(3) + q.q1(3) ) /2.;
 

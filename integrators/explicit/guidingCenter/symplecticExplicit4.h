@@ -25,8 +25,9 @@ namespace Integrators{
 	};
 
 	template <int DIM> SymplecticExplicit4<DIM>::SymplecticExplicit4(Config::Config* config) : VariationalIntegrator<DIM>(config){
+		if (DIM!=8) throw invalid_argument("Invalid dimension for symplectic explicit 4: please use 8.");
 		system = guidingcenterFactory<DIM>(config->system,config);		
-		mu = system->mu;
+		mu = config->mu;
 	}
 
 	template <int DIM> PositionMomentumPoint<DIM> SymplecticExplicit4<DIM>::LegendreRight(PositionPoints<DIM> q, double h){
@@ -35,8 +36,8 @@ namespace Integrators{
 
 		GuidingField field = system->fieldconfig->compute(q.q1);
 
-		Matrix4d M;
-		Vector4d W,Q;
+		Matrix<double,DIM/2,DIM/2> M;
+		Matrix<double,DIM/2,1> W,Q;
 
 		//~ //BUILD M
 		M(0,1) = field.Bdag(2);
@@ -53,14 +54,14 @@ namespace Integrators{
 		M(3,2)=field.b(2);
 		M(0,0) = M(1,1) = M(2,2) = M(3,3) = 0;
 
-		Matrix4d grad2h = Matrix4d::Zero();
-		grad2h.block<3,3>(0,0) = mu*system->fieldconfig->B_hessian(q.q1.head(3));
+		Matrix<double,DIM/2,DIM/2> grad2h;
+		grad2h.block(0,0,2,2) = mu*field.B_hessian;
 		grad2h(3,3) = 1.;
 		M += h/2.*grad2h;
 
 		M/=2.;
 
-		Vector4d dq = q.q1 - q.q0;
+		Matrix<double,DIM/2,1> dq = q.q1 - q.q0;
 		Q = M*dq;
 
 		z.q = q.q1;
@@ -94,7 +95,7 @@ namespace Integrators{
 		M(0,0) = M(1,1) = M(2,2) = M(3,3) = 0;
 
 		Matrix4d grad2h = Matrix4d::Zero();
-		grad2h.block<3,3>(0,0) = mu*system->fieldconfig->B_hessian(z.q.head(3));
+		grad2h.block(0,0,2,2) = mu*field.B_hessian;
 		grad2h(3,3) = 1.;
 		M -= h/2.*grad2h;
 

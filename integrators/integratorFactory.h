@@ -11,21 +11,26 @@
 
 #include "implicit/guidingCenter/symplecticImplicit1.h"
 #include "implicit/guidingCenter/symplecticSemiexplicitQin.h"
+#include "implicit/guidingCenter/symplecticImplicit3D.h"
 #include "implicit/variationalMidpoint.h"
 
 using namespace std;
 
 namespace Integrators{
 	template <int DIM> Integrator<DIM> *integratorFactory(std::string const& integratorName, Config::Config* config){
-		if (integratorName=="SymplecticExplicit1") return new SymplecticExplicit1<DIM>(config);
-		else if (integratorName=="SymplecticExplicit2") return new SymplecticExplicit2<DIM>(config);
-		else if (integratorName=="SymplecticExplicit3") return new SymplecticExplicit3<DIM>(config);
-		else if (integratorName=="SymplecticExplicit4") return new SymplecticExplicit4<DIM>(config);
-		else if (integratorName=="RK4") return new RK4<DIM>(config);
-
-		else if (integratorName=="SymplecticImplicit1") return new SymplecticImplicit1<DIM>(config);
-		else if (integratorName=="symplecticSemiexplicitQin") return new SemiexplicitQin<DIM>(config);
+		if (integratorName=="RK4") return new RK4<DIM>(config);
 		else if (integratorName=="VariationalMidpoint") return new VariationalMidpoint<DIM>(config);
+		else if (DIM==8){
+			if (integratorName=="SymplecticExplicit1") return new SymplecticExplicit1<DIM>(config);
+			else if (integratorName=="SymplecticExplicit2") return new SymplecticExplicit2<DIM>(config);
+			else if (integratorName=="SymplecticExplicit3") return new SymplecticExplicit3<DIM>(config);
+			else if (integratorName=="SymplecticExplicit4") return new SymplecticExplicit4<DIM>(config);
+			else if (integratorName=="SymplecticImplicit1") return new SymplecticImplicit1<DIM>(config);
+			else if (integratorName=="symplecticSemiexplicitQin") return new SemiexplicitQin<DIM>(config);
+		}
+		else if (DIM==6){
+			if (integratorName=="SymplecticImplicit3D") return new SymplecticImplicit3D<DIM>(config);
+		}
 
 		throw invalid_argument("Invalid integrator "+ integratorName);
 	}

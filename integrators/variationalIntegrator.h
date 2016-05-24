@@ -20,7 +20,7 @@ namespace Integrators{
 
 			HamiltonianSystem<DIM>* system;
 
-			PhaseSpacePoints<DIM> initialize(PhaseSpacePoints<DIM> z, initializationType init, double h);
+			virtual PhaseSpacePoints<DIM> initialize(PhaseSpacePoints<DIM> z, initializationType init, double h, Config::Config* config);
 	
 	};
 
@@ -29,7 +29,7 @@ namespace Integrators{
 		system = hamiltonianSystemFactory<DIM>(config->system,config);		
 	}
 
-	template <int DIM> PhaseSpacePoints<DIM> VariationalIntegrator<DIM>::initialize(PhaseSpacePoints<DIM> z, initializationType init, double h){
+	template <int DIM> PhaseSpacePoints<DIM> VariationalIntegrator<DIM>::initialize(PhaseSpacePoints<DIM> z, initializationType init, double h, Config::Config* config){
 		if (init==INIT_MANUAL_MULTISTEP){
 			PositionPoints<DIM> q;
 			q.q0 = z.z0.head(DIM/2);
@@ -49,7 +49,7 @@ namespace Integrators{
 
 			return z;
 		}
-		else return Integrator<DIM>::initialize(z,init, h);
+		else return Integrator<DIM>::initialize(z,init, h, config);
 	}
 
 	template <int DIM> Matrix<double,DIM,1> VariationalIntegrator<DIM>::StepForward(Matrix<double,DIM,1> z0, double h){

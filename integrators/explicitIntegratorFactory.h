@@ -7,6 +7,7 @@
 #include "explicit/guidingCenter/symplecticExplicit2.h"
 #include "explicit/guidingCenter/symplecticExplicit3.h"
 #include "explicit/guidingCenter/symplecticExplicit4.h"
+#include "explicit/guidingCenter/symplecticImplicit2FirstGuess.h"
 #include "explicit/RK4.h"
 
 using namespace std;
@@ -14,11 +15,16 @@ using namespace std;
 namespace Integrators{
 
 	template <int DIM> Integrator<DIM> *explicitIntegratorFactory(std::string const& integratorName, Config::Config* config){
-		if (integratorName=="SymplecticExplicit1") return new SymplecticExplicit1<DIM>(config);
-		else if (integratorName=="SymplecticExplicit2") return new SymplecticExplicit2<DIM>(config);
-		else if (integratorName=="SymplecticExplicit3") return new SymplecticExplicit3<DIM>(config);
-		else if (integratorName=="SymplecticExplicit4") return new SymplecticExplicit4<DIM>(config);
-		else if (integratorName=="RK4") return new RK4<DIM>(config);
+		if (integratorName=="RK4") return new RK4<DIM>(config);
+		else if (DIM==8){
+			if (integratorName=="SymplecticExplicit1") return new SymplecticExplicit1<DIM>(config);
+			else if (integratorName=="SymplecticExplicit2") return new SymplecticExplicit2<DIM>(config);
+			else if (integratorName=="SymplecticExplicit3") return new SymplecticExplicit3<DIM>(config);
+			else if (integratorName=="SymplecticExplicit4") return new SymplecticExplicit4<DIM>(config);
+		}
+		else if (DIM==6){
+			if (integratorName=="SymplecticImplicit3DFirstGuess") return new SymplecticImplicit3DFirstGuess<DIM>(config);
+		}
 	
 		throw invalid_argument("Invalid explicit integrator "+ integratorName);
 	}

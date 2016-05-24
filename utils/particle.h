@@ -82,13 +82,13 @@ namespace Particles{
 
 		initializationType init = config->initialization_type;
 		if ((init==INIT_HAMILTONIAN) || (init==INIT_MANUAL) || (init==INIT_MANUAL_MULTISTEP)){
-			set_z(integrator->initialize(get_z(),init, h));
+			set_z(integrator->initialize(get_z(),init, h, config));
 		}
 		else if (init==INIT_LAGRANGIAN){
 
 			//compute q1 from q0 using an auxiliary integrator
 			if (config->init_steps<=0) throw invalid_argument("init_steps must be > 0");
-			auxiliaryIntegrator = integratorFactory<DIM>(config->auxiliary_integrator,config);
+			auxiliaryIntegrator = explicitIntegratorFactory<DIM>(config->auxiliary_integrator,config);
 
 			z1 = z0;
 			for (int i=0;i<config->init_steps;i++){
@@ -96,7 +96,7 @@ namespace Particles{
 			}
 
 			//compute z1 from (q0,q1) using main integrator (i.e. legendre right of symplectic integrators)
-			set_z(integrator->initialize(get_z(),INIT_MANUAL_MULTISTEP, h));
+			set_z(integrator->initialize(get_z(),INIT_MANUAL_MULTISTEP, h, config));
 		}
 		else throw invalid_argument("Invalid initializatin type");
 

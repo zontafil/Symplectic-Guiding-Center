@@ -37,6 +37,7 @@ namespace Systems{
 
 		PositionMomentumPoint<DIM> z1;
 		z1.q = z.z1.head(DIM/2);
+		z1.p = z.z1.tail(DIM/2);
 		PositionPoints<DIM> q;
 		q.q0 = z.z1.head(DIM/2);
 

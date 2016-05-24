@@ -18,10 +18,10 @@ namespace Integrators{
 
 			System<DIM>* system;
 
-			virtual PhaseSpacePoints<DIM> initialize(PhaseSpacePoints<DIM> z, initializationType init, double h);
+			virtual PhaseSpacePoints<DIM> initialize(PhaseSpacePoints<DIM> z, initializationType init, double h, Config::Config* config);
 	};
 
-	template <int DIM> PhaseSpacePoints<DIM> Integrator<DIM>::initialize(PhaseSpacePoints<DIM> z, initializationType init, double h){
+	template <int DIM> PhaseSpacePoints<DIM> Integrator<DIM>::initialize(PhaseSpacePoints<DIM> z, initializationType init, double h, Config::Config* config){
 		if (init==INIT_MANUAL){
 			z.z1 = z.z0;
 			return z;

@@ -12,7 +12,7 @@ namespace Config{
 	class ConfigInterface
 	{
 		public:
-			string magneticField, system, integrator, auxiliary_integrator, first_guess_integrator;
+			string emField, system, integrator, auxiliary_integrator, first_guess_integrator;
 			double h;
 			int init_steps;
 			int implicit_iterations;
@@ -28,7 +28,7 @@ namespace Config{
 			initializationType initialization_type;
 
 			//guiding center specific
-			double mu;
+			double mu, guidingcenter3D_u0;
 
 			//force free specific
 			bool forcefree_pert;

@@ -25,8 +25,9 @@ namespace Integrators{
 	};
 
 	template <int DIM> SymplecticExplicit2<DIM>::SymplecticExplicit2(Config::Config* config) : VariationalIntegrator<DIM>(config){
+		if (DIM!=8) throw invalid_argument("Invalid dimension for symplectic explicit 2: please use 8.");
 		system = guidingcenterFactory<DIM>(config->system,config);		
-		mu = system->mu;
+		mu = config->mu;
 	}
 
 	template <int DIM> PositionMomentumPoint<DIM> SymplecticExplicit2<DIM>::LegendreRight(PositionPoints<DIM> q, double h){
@@ -35,8 +36,8 @@ namespace Integrators{
 
 		GuidingField field = system->fieldconfig->compute(q.q1);
 
-		Matrix4d M;
-		Vector4d W,Q;
+		Matrix<double,DIM/2,DIM/2> M;
+		Matrix<double,DIM/2,1>  W,Q;
 
 		//~ //BUILD M
 		M(0,1) = field.Bdag(2);
@@ -57,7 +58,7 @@ namespace Integrators{
 
 		M/=2.;
 
-		Vector4d dq = q.q1 - q.q0;
+		Matrix<double,DIM/2,1>  dq = q.q1 - q.q0;
 		Q = M*dq;
 
 		z.q = q.q1;
