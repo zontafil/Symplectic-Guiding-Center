@@ -108,10 +108,12 @@ namespace GuidingFields{
 		}
 
 		//COMPUTE B_dagger
-		ret.Bdag = ret.B;
-		ret.Bdag(0) += u*(b_jac(2,1)-b_jac(1,2));
-		ret.Bdag(1) += u*(b_jac(0,2)-b_jac(2,0));
-		ret.Bdag(2) += u*(b_jac(1,0)-b_jac(0,1));		
+		if (DIM==8){
+			ret.Bdag = ret.B;
+			ret.Bdag(0) += u*(b_jac(2,1)-b_jac(1,2));
+			ret.Bdag(1) += u*(b_jac(0,2)-b_jac(2,0));
+			ret.Bdag(2) += u*(b_jac(1,0)-b_jac(0,1));		
+		}
 
 		ret.B_hessian = B_hessian(x);
 
