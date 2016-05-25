@@ -15,7 +15,10 @@ namespace Systems{
 
 			const int conservedQuantities;
 
+			//optional: equation of motion: z' = f(z), some integrators (i.e. RK4) will use this
 			virtual Matrix<double,DIM,1> f_eq_motion(Matrix<double,DIM,1> z) = 0;
+
+			//conserved quantities, i.e. energy, momenta
 			virtual vector<double>* getConservedQuantities(PhaseSpacePoints<DIM> z) = 0;
 	};
 

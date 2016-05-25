@@ -38,10 +38,14 @@ namespace Systems{
 	template<int DIM> GuidingCenter<DIM>::GuidingCenter(Config::Config* config) : HamiltonianSystem<DIM>(config){
 		if ((DIM!=8) && (DIM!=6)) throw invalid_argument("Invalid Guiding Center dimension: please use 8 or 6");
 
+		//build an em guiding field.
 		fieldconfig = new GuidingFieldConfiguration<DIM>(config);
 	}
 
 	template<int DIM> Matrix<double,DIM/2,1> GuidingCenter<DIM>::momentum(PositionPoints<DIM> q){
+
+		//degenerate momenta for guiding center 8D.
+		//see paragraph 6.3 of PDF
 
 		Matrix<double,DIM/2,1> p;
 		p.setZero();
@@ -57,10 +61,12 @@ namespace Systems{
 	};
 	template<int DIM> double GuidingCenter<DIM>::Hamiltonian(PositionMomentumPoint<DIM> z){
 		if (DIM==8){
+			//guiding center hamiltonian
 			GuidingField field = this->fieldconfig->compute(z.q);
 			return (0.5*z.q(3)*z.q(3)+mu*field.Bnorm);
 		}
 		else{
+			//guiding center hamiltonian, 3D version. See parapraph 6.4.2
 			GuidingField field = this->fieldconfig->compute(z.q);
 			Matrix<double,3,1> p = z.p.head(3);
 			double u = (p - field.A).norm();
@@ -69,10 +75,12 @@ namespace Systems{
 	}
 	template<int DIM> double GuidingCenter<DIM>::Lagrangian(Matrix<double,DIM/2,1> q, Matrix<double,DIM/2,1> v){
 		if (DIM==8){
+			//guiding center lagrangian
 			GuidingField field = this->fieldconfig->compute(q);
 			return (field.Adag.dot(v.head(3)) - (0.5*q(3)*q(3)+mu*field.Bnorm));
 		}
 		else{
+			//guiding center lagrangian, 3D version. See parapraph 6.4.2
 			Matrix<double,3,1> v3D = v.head(3);
 			GuidingField field = this->fieldconfig->compute(q);
 			double u = field.b.dot(v3D);
@@ -83,6 +91,8 @@ namespace Systems{
 	template <int DIM> Matrix<double,DIM,1> GuidingCenter<DIM>::f_eq_motion(Matrix<double,DIM,1> z){
 		Matrix<double,DIM,1> f;
 		if (DIM==8){
+
+			//guiding center eqs of motion. See paragraph 3.3
 
 			GuidingField field = fieldconfig->compute(z.head(4));
 

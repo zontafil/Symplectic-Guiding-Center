@@ -1,7 +1,7 @@
+// first guess for newton iteration of guiding center implicit 2 (3D version)
+
 #ifndef IMPLICIT2FIRSTGUESS_H
 #define IMPLICIT2FIRSTGUESS_H
-
-
 
 namespace Integrators{
 	template <int DIM> class SymplecticImplicit3DFirstGuess: public Integrator<DIM>
@@ -23,6 +23,10 @@ namespace Integrators{
 	};
 
 	template <int DIM> Matrix<double,DIM,1> SymplecticImplicit3DFirstGuess<DIM>::StepForward(Matrix<double,DIM,1> z, double h){
+
+		// u0 = ||p0-A||/2 + mu*B
+		// compute (x0,u0) --> (x1,u1) with RK4
+
 		Matrix<double,4,1> k1,k2,k3,k4,q0,q1;
 
 		q0.head(3) = z.head(3);

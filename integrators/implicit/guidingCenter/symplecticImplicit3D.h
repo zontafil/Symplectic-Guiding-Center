@@ -1,4 +1,6 @@
 //Guiding center implicit integrator, scheme 2 (guiding center 3D lagrangian)
+// see paragraph 6.4.2
+
 #ifndef SYMPLECTICIMPLICIT2_H
 #define SYMPLECTICIMPLICIT2_H
 
@@ -27,12 +29,16 @@ namespace Integrators{
 	template <int DIM> PhaseSpacePoints<DIM> SymplecticImplicit3D<DIM>::initialize(PhaseSpacePoints<DIM> z, initializationType init, double h, Config::Config* config){
 
 		if (init==INIT_HAMILTONIAN){
+			//compute p0 from x0 and u0 using continuous momenta equation (6.42)
 			GuidingField field = system->fieldconfig->compute(z.z0.head(3));
 			z.z1.head(3) = z.z0.head(3);
 			z.z1.tail(3) = config->guidingcenter3D_u0*field.b + field.A;
 			return z;
 		}
 		else if (init==INIT_LAGRANGIAN){
+
+			// compute (x1,u1) from (x0,u0) with RK4 and p0 from (x0,x1) using legendre left
+
 			Matrix<double,4,1> q1;
 			q1.head(3) = z.z0.head(3);
 			q1(3) = config->guidingcenter3D_u0;
@@ -53,6 +59,9 @@ namespace Integrators{
 			return z;
 		}
 		else if (init==INIT_MANUAL_MULTISTEP){
+
+			//compute (x0,p0) from (x0,x1) using Legendre left
+
 			PositionPoints<DIM> q;
 			q.q0 = z.z0.head(DIM/2);
 			q.q1 = z.z1.head(DIM/2);
@@ -80,6 +89,8 @@ namespace Integrators{
 	}
 
 	template <int DIM> Matrix<double,4,1> SymplecticImplicit3D<DIM>::f_eq_motion(Matrix<double,4,1> z){
+		//equation of motion of guiding center 4D
+
 		Matrix<double,4,1> f;
 
 		GuidingField field = system->fieldconfig->compute(z.head(3));

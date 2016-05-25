@@ -1,3 +1,6 @@
+//2D field configuration. (case A)
+// see  6.2.2 paragraph
+
 #ifndef TWODIMFIELD_H
 #define TWODIMFIELD_H
 

@@ -1,3 +1,7 @@
+//construct a variational integrator starting from a discrete lagrangian.
+// the integrator is in general implicit, that's why it's an implementation of VariationalImplicit
+
+
 #ifndef VARIATIONALIMPLICITDISCRETELAGRANGIAN_H
 #define VARIATIONALIMPLICITDISCRETELAGRANGIAN_H
 
@@ -7,12 +11,17 @@ namespace Integrators{
 	template <int DIM> class VariationalDiscreteLagrangian: public VariationalImplicit<DIM>
 	{
 		private:
+			//discrete lagrangian
 			virtual double DiscreteLagrangian(PositionPoints<DIM> q, double h) = 0;
+
+			//space step for numerical derivatives
 			const double hx;
 		public:
 			VariationalDiscreteLagrangian(Config::Config* config): VariationalImplicit<DIM>(config), hx(1.E-5){};
 			~VariationalDiscreteLagrangian(){};
 
+			//legendre left and right are computed numerically from discrete lagrangian.
+			// see paragraph 4.2.2
 			PositionMomentumPoint<DIM> LegendreLeft(PositionPoints<DIM> q, double h);
 			PositionMomentumPoint<DIM> LegendreRight(PositionPoints<DIM> q, double h);
 	};

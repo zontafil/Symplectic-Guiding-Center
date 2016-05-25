@@ -1,3 +1,9 @@
+//variational integrator:
+// there must be an hamiltonian system.
+// the integrator flow is defined by legendre left and right transforms (see paragraph 4.4.2)
+
+// --> (q1,p1) = legendreRight(LegendreLeftInverse(q0,p0))
+
 #ifndef VARIATIONAL_H
 #define VARIATIONAL_H
 
@@ -31,6 +37,9 @@ namespace Integrators{
 
 	template <int DIM> PhaseSpacePoints<DIM> VariationalIntegrator<DIM>::initialize(PhaseSpacePoints<DIM> z, initializationType init, double h, Config::Config* config){
 		if (init==INIT_MANUAL_MULTISTEP){
+
+			//q0,q1 are provided. Compute p1 with LegendreRight
+
 			PositionPoints<DIM> q;
 			q.q0 = z.z0.head(DIM/2);
 			q.q1 = z.z1.head(DIM/2);
@@ -40,6 +49,9 @@ namespace Integrators{
 			return z;
 		}
 		else if (init==INIT_HAMILTONIAN){
+
+			//q0, q1 is provided. Compute p0 using continuous conjugate momentum
+
 			PositionPoints<DIM> q;
 			q.q0 = z.z0.head(DIM/2);
 			q.q1 = z.z1.head(DIM/2);

@@ -1,3 +1,6 @@
+// implicit guiding center version, modified by Qin. (paragraph 6.4.3)
+
+
 #ifndef SEMIEXPLICITQIN_H
 #define SEMIEXPLICITQIN_H
 

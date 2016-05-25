@@ -1,3 +1,9 @@
+//factory for systems.
+//use this if you want to compose a system inside a class (i.e. particle)
+
+//i.e. if you want to create a GuidingCenter system:
+// System<DIM> *gc = systemFactory<DIM>("GuidingCenter",config);
+
 #ifndef SYSTEMFACTORY_H
 #define SYSTEMFACTORY_H
 

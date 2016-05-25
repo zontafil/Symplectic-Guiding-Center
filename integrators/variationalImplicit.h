@@ -1,3 +1,6 @@
+//variational integrator, implicit version.
+//compute legendre left inverse using a first guess integrator and newton iterations
+
 #ifndef VARIATIONALIMPLICIT_H
 #define VARIATIONALIMPLICIT_H
 
@@ -11,9 +14,15 @@ namespace Integrators{
 	template <int DIM> class VariationalImplicit: public VariationalIntegrator<DIM>
 	{
 		private:
+			//first guess integrator for newton iterations
 			Integrator<DIM>* firstGuess;
+
+			//number of newton iterations
 			unsigned int implicitIterations;
+
 			PositionPoints<DIM> ImplicitIterationLegendreLeftInverse(PositionMomentumTwoPoints<DIM> z, double h);
+
+			//space step for numerical derivatives
 			const double hx;
 		public:
 			VariationalImplicit(Config::Config *config);
@@ -39,6 +48,7 @@ namespace Integrators{
 		PositionMomentumPoint<DIM>z1;
 		PositionPoints<DIM> q;
 
+		//compute z1 using a first guess (i.e. RK4)
 		z1vec = firstGuess->StepForward(z0vec,h);
 		q.q0 = z0.q;
 		q.q1 = z1vec.head(DIM/2);
@@ -50,6 +60,8 @@ namespace Integrators{
 			z.q0 = z0.q;
 			z.p0 = z0.p;
 			z.q1 = q.q1;
+
+			//compute q1 from q0,p0 and a first guess of q1
 			q = ImplicitIterationLegendreLeftInverse(z,h);
 		}
 
@@ -58,6 +70,8 @@ namespace Integrators{
 	}
 
 	template <int DIM> PositionPoints<DIM> VariationalImplicit<DIM>::ImplicitIterationLegendreLeftInverse(PositionMomentumTwoPoints<DIM> z, double h){
+		//newton iteration for the legendre left inverse.
+		// q1_new = q1 - f/f'
 
 		Matrix<double,DIM/2,1> f, df1,df0, q1_new;
 		Matrix<double,DIM/2,DIM/2> Jf;

@@ -1,4 +1,5 @@
 // Symplectic integrator for guiding center
+// see paragraph 6.4.1
 
 #ifndef SYMPLECTICIMPLICIT1_H
 #define SYMPLECTICIMPLICIT1_H

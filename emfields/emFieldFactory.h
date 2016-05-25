@@ -1,3 +1,10 @@
+//factory for EMfields.
+//use this if you want to compose a field inside a class (i.e. guidingField)
+
+//i.e. if you want to create a Tokamak field:
+// EMFIeld<DIM> *field = EMFIeldFactory<DIM>("Tokamak",config);
+
+
 #ifndef EMFIELDFACTORY_H
 #define EMFIELDFACTORY_H
 

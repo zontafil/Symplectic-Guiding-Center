@@ -1,3 +1,6 @@
+//RK4 for a generic system
+// the system must have implemented eqs of motion.
+
 #ifndef RK4_H
 #define RK4_H
 

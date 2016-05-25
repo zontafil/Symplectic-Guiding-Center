@@ -1,3 +1,6 @@
+//force-free (perturbed and unperturbed) field configuration. (case C)
+// see  6.2.3 paragraph
+
 #ifndef FORCEFREE_H
 #define FORCEFREE_H
 

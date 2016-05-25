@@ -1,3 +1,9 @@
+//factory for integrators.
+//use this if you want to compose an integrator inside a class (i.e. particle)
+
+//i.e. if you want to create a RK4 integrator:
+// Integrator<DIM> *rk = integratorFactory<DIM>("RK4",config);
+
 #ifndef INTEGRATORFACTORY_H
 #define INTEGRATORFACTORY_H
 

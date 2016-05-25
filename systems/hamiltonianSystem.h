@@ -22,8 +22,9 @@ namespace Systems{
 			HamiltonianSystem(Config::Config* config): System<DIM>(config), conservedQuantities(1+DIM/2){};
 			~HamiltonianSystem(){};
 
+			//hamiltonian, lagrangian and discretization of momentum (p(q0,q1))
 			virtual double Hamiltonian(PositionMomentumPoint<DIM> z) = 0;
-			virtual Matrix<double,DIM/2,1> momentum(PositionPoints<DIM> q) = 0;
+			virtual Matrix<double,DIM/2,1> momentum(PositionPoints<DIM> q) = 0; //this is useful for degenerate systems, when p=p(q)
 			virtual double Lagrangian(Matrix<double,DIM/2,1> q, Matrix<double,DIM/2,1> v) = 0;
 
 			const int conservedQuantities;
@@ -41,10 +42,11 @@ namespace Systems{
 		PositionPoints<DIM> q;
 		q.q0 = z.z1.head(DIM/2);
 
+		//first conserved quantity is the hamiltonian
 		ret->at(0) = Hamiltonian(z1);
 
 		Matrix<double,DIM/2,1> mom = momentum(q);
-
+		
 		for (int i=0;i<DIM/2;i++){
 			//compute (continuous momentum) - p1
 			ret->at(i+1) = mom(i) - z.z1(i+DIM/2);

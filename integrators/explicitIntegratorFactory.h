@@ -1,3 +1,12 @@
+//factory for explicit integrators.
+//use this if you want to compose an explicit integrator inside a class (i.e. particle)
+
+//i.e. if you want to create a RK4 integrator:
+// Integrator<DIM> *rk = integratorFactory<DIM>("RK4",config);
+
+//you want to use this instead of integrator factory, when you can't use an implicit integrator.
+//i.e. a first guess newton integrator should be explicit.
+
 #ifndef EXPLICITINTEGRATORFACTORY_H
 #define EXPLICITINTEGRATORFACTORY_H
 

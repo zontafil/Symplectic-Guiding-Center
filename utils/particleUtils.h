@@ -7,12 +7,15 @@ using namespace Eigen;
 
 namespace Particles{
 
+	//initialization type.
+	//see paragraph 6.3 of PDF.
+
+	//MULTISTEP: compute initial conditions (i.e. q0,p0 from q0,q1)
 	typedef enum {
 		INIT_HAMILTONIAN,
 		INIT_LAGRANGIAN,
 		INIT_MANUAL,
-		INIT_MANUAL_MULTISTEP,
-		INIT_GUIDINGCENTER3D
+		INIT_MANUAL_MULTISTEP
 	} initializationType;
 
 	template <int DIM> struct PhaseSpacePoints{

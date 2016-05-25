@@ -1,3 +1,5 @@
+//EM field interface. Must implement vector potential and magnetic field
+
 #ifndef EMFIELD_H
 #define EMFIELD_H
 

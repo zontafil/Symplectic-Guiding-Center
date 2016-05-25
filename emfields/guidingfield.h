@@ -1,3 +1,6 @@
+//Guiding Field Configuration.
+// Expose useful guiding center quantities starting from a EM field
+// i.e. gradient of B, A_dagger etc (see GuidingField struct)
 #ifndef GUIDINGFIELD_H
 #define GUIDINGFIELD_H
 
@@ -9,6 +12,7 @@ using namespace EMFields;
 
 namespace GuidingFields{
 
+	//output type of computation
 	struct GuidingField{
 		Matrix<double,3,1> B, A, Adag, phi_grad, b, Bdag, B_grad;
 		Matrix<double,3,3> Adag_jac, B_hessian;
@@ -27,6 +31,9 @@ namespace GuidingFields{
 			GuidingFieldConfiguration(Config::Config* config);
 			~GuidingFieldConfiguration(){};
 
+			//compute the field from q
+			// q is (x,u) for 8D, (x) for 6D
+			// if the dimension is 6, some quantities, like A_dagger are not computed
 			GuidingField compute(Matrix<double,DIM/2,1> q);
 	};
 

@@ -1,4 +1,4 @@
-// Symplectic integrator for guiding center
+// Symplectic integrator for guiding center, explicit 4 (paragraph 6.4.7)
 
 #ifndef SYMPLECTICEXPLICIT4_H
 #define SYMPLECTICEXPLICIT4_H

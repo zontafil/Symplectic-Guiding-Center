@@ -1,3 +1,4 @@
+//build a variational integrator by discretizing the lagrangian with the midpoint rule
 #ifndef VARIATIONALMIDPOINT_H
 #define VARIATIONALMIDPOINT_H
 

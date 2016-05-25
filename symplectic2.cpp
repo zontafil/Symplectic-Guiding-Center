@@ -53,10 +53,12 @@ int main(int argc, char* argv[]){
     // ******
     for (int t=config->time_offset + 1;t<=config->max_t+config->time_offset;t++){
 
+        //PRINT TO SCREEN EVERY N STEPS
         if ((config->print_timestep_mult>0) && (t%config->print_timestep_mult==0)) cout << "Timestep " << t << endl;
 
         particle->StepForward();
-
+        
+        //PRINT TO SCREEN FIRST STEP
         if (t==1) cout << "z1:\t" << particle->z1.transpose() << endl;
 
         //EXIT IF THE ERROR IS TOO HIGH (ASSUMING ENERGY IS THE FIRST CONSERVED QUANTITY)

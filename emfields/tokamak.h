@@ -1,3 +1,6 @@
+//tokamak field configuration. (case B)
+// see  6.2.2 paragraph
+
 #ifndef TOKAMAK_H
 #define TOKAMAK_H
 

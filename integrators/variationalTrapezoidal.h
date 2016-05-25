@@ -1,3 +1,6 @@
+// build a variational integrator starting from the continuous lagrangian and 
+// discretizing it with the rectangle method (alpha is the position of the height of the rectangle )
+
 #ifndef VARIATIONALTRAPEZOIDAL_H
 #define VARIATIONALTRAPEZOIDAL_H
 
