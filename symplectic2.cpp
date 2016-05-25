@@ -33,21 +33,19 @@ void setDebugLevel(Config::Config* config);
 
 int main(int argc, char* argv[]){
 
-
-    //configuration and output file
-    ofstream out("out/out.txt");
+    //configuration 
     Config::Config* config = new Config::Config();
 
-    //set debug level
+    //open output file
+    ofstream out(config->outFile.c_str()); 
+    if (!out.is_open()) throw invalid_argument("Can't open output file for write");
+
+    //set debug level and print precision
     setDebugLevel(config);
+    setPrintPrecision(config->print_precision,out);
 
     //create a particle
     Particle<Config::DIM>* particle = new Particle<Config::DIM>(config);
-
-    // ofstream out(config->outFile.c_str());  //output file
-    if (!out.is_open()) throw invalid_argument("Can't open output file for write");
-
-    setPrintPrecision(config->print_precision,out);
 
     cout << "time step: " << config->h << endl;
     cout << "Initialization: " << endl;
