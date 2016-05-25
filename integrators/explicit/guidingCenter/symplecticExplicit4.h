@@ -54,7 +54,8 @@ namespace Integrators{
 		M(3,2)=field.b(2);
 		M(0,0) = M(1,1) = M(2,2) = M(3,3) = 0;
 
-		Matrix4d grad2h = Matrix4d::Zero();
+		Matrix<double,DIM/2,DIM/2> grad2h;
+		grad2h.setZero();
 		grad2h.block(0,0,3,3) = mu*field.B_hessian.block(0,0,3,3);
 		grad2h(3,3) = 1.;
 		M += h/2.*grad2h;
@@ -76,8 +77,8 @@ namespace Integrators{
 
 		GuidingField field = system->fieldconfig->compute(z.q); 
 		  
-		Matrix4d M;
-		Vector4d W,Q;
+		Matrix<double,DIM/2,DIM/2> M;
+		Matrix<double,DIM/2,1> W,Q;
 
 		//~ //BUILD M
 		M(0,1) = field.Bdag(2);
@@ -94,7 +95,8 @@ namespace Integrators{
 		M(3,2)=field.b(2);
 		M(0,0) = M(1,1) = M(2,2) = M(3,3) = 0;
 
-		Matrix4d grad2h = Matrix4d::Zero();
+		Matrix<double,DIM/2,DIM/2> grad2h;
+		grad2h.setZero();
 		grad2h.block(0,0,3,3) = mu*field.B_hessian.block(0,0,3,3);
 		grad2h(3,3) = 1.;
 		M -= h/2.*grad2h;
