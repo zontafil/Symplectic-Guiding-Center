@@ -36,7 +36,7 @@ namespace Config{
 			string auxiliary_integrator;
 			int init_steps;
 
-			// first guess integrator for implicit and number of newton iterations
+			// first guess integrator for implicit and number of newton iterations (must be explicit)
 			string first_guess_integrator;
 			int implicit_iterations;
 			
