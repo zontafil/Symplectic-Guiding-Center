@@ -59,11 +59,14 @@ int main(int argc, char* argv[]){
 
         if (t==1) cout << "z1:\t" << particle->z1.transpose() << endl;
 
-        //EXIT IF THE ERROR IS TOO HIGH
-        if ((config->exit_on_error) && (abs(particle->Eerr0)>config->error_threshold)){
-          cout << "Timestep: " << t << "\tError too high! Exiting." << endl;
-          break;
-        }
+        //EXIT IF THE ERROR IS TOO HIGH (ASSUMING ENERGY IS THE FIRST CONSERVED QUANTITY)
+        if (config->exit_on_error){
+            vector<double>* conservedQuantitiesError = particle->conservedQuantities_err1;
+            if ((conservedQuantitiesError->size()>0) && (abs(conservedQuantitiesError->at(0))>config->error_threshold)){
+              cout << "Timestep: " << t << "\tError too high! Exiting." << endl;
+              break;
+            }
+        } 
 
         //PRINT TO FILE
         if (((t+config->print_timestep_offset)%config->file_timestep_mult)==0) printToFile(t,config,particle, out);
