@@ -54,8 +54,8 @@ namespace Integrators{
 		M(3,2)=field.b(2);
 		M(0,0) = M(1,1) = M(2,2) = M(3,3) = 0;
 
-		Matrix<double,DIM/2,DIM/2> grad2h;
-		grad2h.block(0,0,2,2) = mu*field.B_hessian;
+		Matrix4d grad2h = Matrix4d::Zero();
+		grad2h.block(0,0,3,3) = mu*field.B_hessian.block(0,0,3,3);
 		grad2h(3,3) = 1.;
 		M += h/2.*grad2h;
 
@@ -95,7 +95,7 @@ namespace Integrators{
 		M(0,0) = M(1,1) = M(2,2) = M(3,3) = 0;
 
 		Matrix4d grad2h = Matrix4d::Zero();
-		grad2h.block(0,0,2,2) = mu*field.B_hessian;
+		grad2h.block(0,0,3,3) = mu*field.B_hessian.block(0,0,3,3);
 		grad2h(3,3) = 1.;
 		M -= h/2.*grad2h;
 
