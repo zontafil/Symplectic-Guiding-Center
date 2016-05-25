@@ -1,3 +1,15 @@
+//integrator for numerical simulation of physical systems
+// and in particular for the symplectic integration of the non canonical guiding center problem.
+
+//see configInterface.h ,config.h and the readme for configuration
+
+//the format of the output file is:
+// timestep (1 column)
+// orbit (1 column)
+// z (DIM columns)
+// conserved quantities (specific for the system. The first column should always be the energy error.)
+
+
 #include <sstream>
 #include <iostream>
 #include <string>
@@ -57,7 +69,7 @@ int main(int argc, char* argv[]){
         if ((config->print_timestep_mult>0) && (t%config->print_timestep_mult==0)) cout << "Timestep " << t << endl;
 
         particle->StepForward();
-        
+
         //PRINT TO SCREEN FIRST STEP
         if (t==1) cout << "z1:\t" << particle->z1.transpose() << endl;
 
