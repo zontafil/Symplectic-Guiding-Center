@@ -20,6 +20,8 @@ For a theoretical background and an explanation of the different integrators, pl
 
 ### Compile and run
 
+Make sure you have a valid configuration (config.h) file (see the following section)
+
       make
       ./bin/symplectic
 
