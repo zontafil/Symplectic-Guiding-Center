@@ -4,5 +4,6 @@ out_*
 bin/
 lib/
 config.h
+config.backup
 out/
 build.sh
