@@ -9,3 +9,4 @@ config.backup
 out/*
 out/!.gitignore
 build.sh
+symplecticIntegrator.cpp
