@@ -1,3 +1,0 @@
-#!/bin/sh
-
-g++ -Wall -lgsl -lgslcblas -fopenmp -O3 $1

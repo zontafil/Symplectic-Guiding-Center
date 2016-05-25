@@ -1,3 +1,11 @@
 a.out
 out_*
 *.sublime*
+bin/*
+bin/!.gitignore
+lib/
+config.h
+config.backup
+out/*
+out/!.gitignore
+build.sh
