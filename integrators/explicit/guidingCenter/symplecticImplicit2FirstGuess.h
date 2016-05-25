@@ -50,6 +50,13 @@ namespace Integrators{
 
 		GuidingField field = system->fieldconfig->compute(z.head(3));
 
+		//compute Bdag manually, since u is not available in EMfields with dim=6
+		double u = z(3);
+		field.Bdag = field.B;
+		field.Bdag(0) += u*(field.b_jac(2,1)-field.b_jac(1,2));
+		field.Bdag(1) += u*(field.b_jac(0,2)-field.b_jac(2,0));
+		field.Bdag(2) += u*(field.b_jac(1,0)-field.b_jac(0,1));		
+
 		f.setZero();
 		
 		Matrix<double,3,1> E_dag;

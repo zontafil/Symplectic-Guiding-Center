@@ -15,7 +15,7 @@ namespace GuidingFields{
 	//output type of computation
 	struct GuidingField{
 		Matrix<double,3,1> B, A, Adag, phi_grad, b, Bdag, B_grad;
-		Matrix<double,3,3> Adag_jac, B_hessian;
+		Matrix<double,3,3> Adag_jac, B_hessian, b_jac;
 		double Bnorm, phi;
 	};
 
@@ -100,7 +100,6 @@ namespace GuidingFields{
 
 		//COMPUTE GRADIENT(B),GRADIENT(phi),JAC(A_dagger)
 		Matrix3d A_jac;
-		Matrix3d b_jac;
 		for (int j=0;j<3;j++){
 		  x0 = x1 = x;
 		  x0(j)-=hx;
@@ -111,15 +110,15 @@ namespace GuidingFields{
 		  if (DIM==8) ret.Adag_jac.col(j) = 0.5*(field->A(x1) + u*B1.normalized() - field->A(x0)-u*B0.normalized())/hx;
 		  A_jac.col(j) = 0.5*(field->A(x1) - field->A(x0))/hx;
 		  ret.B_grad(j) = 0.5*(B1.norm() - B0.norm())/hx;
-		  b_jac.col(j) = 0.5*(B1.normalized() - B0.normalized())/hx;
+		  ret.b_jac.col(j) = 0.5*(B1.normalized() - B0.normalized())/hx;
 		}
 
 		//COMPUTE B_dagger
 		if (DIM==8){
 			ret.Bdag = ret.B;
-			ret.Bdag(0) += u*(b_jac(2,1)-b_jac(1,2));
-			ret.Bdag(1) += u*(b_jac(0,2)-b_jac(2,0));
-			ret.Bdag(2) += u*(b_jac(1,0)-b_jac(0,1));		
+			ret.Bdag(0) += u*(ret.b_jac(2,1)-ret.b_jac(1,2));
+			ret.Bdag(1) += u*(ret.b_jac(0,2)-ret.b_jac(2,0));
+			ret.Bdag(2) += u*(ret.b_jac(1,0)-ret.b_jac(0,1));		
 		}
 
 		ret.B_hessian = B_hessian(x);
