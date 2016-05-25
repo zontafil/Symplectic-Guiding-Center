@@ -6,5 +6,6 @@ bin/!.gitignore
 lib/
 config.h
 config.backup
-out/
+out/*
+out/!.gitignore
 build.sh
