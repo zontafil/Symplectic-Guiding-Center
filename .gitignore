@@ -10,3 +10,4 @@ out/*
 out/!.gitignore
 build.sh
 symplecticIntegrator.cpp
+.vscode
