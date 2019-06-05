@@ -19,8 +19,8 @@ namespace Systems{
 
 	template <int DIM> class GuidingCenter : public HamiltonianSystem<DIM>{ 
 		private:
-			static const double mu = 2.25E-6;
-			static const double hx = 1.E-5;  //step for numerical derivative
+			double mu;
+			double hx;
 		public:
 			GuidingCenter(Config::Config* config);
 			~GuidingCenter(){};
@@ -37,6 +37,8 @@ namespace Systems{
 
 	template<int DIM> GuidingCenter<DIM>::GuidingCenter(Config::Config* config) : HamiltonianSystem<DIM>(config){
 		if ((DIM!=8) && (DIM!=6)) throw invalid_argument("Invalid Guiding Center dimension: please use 8 or 6");
+		mu = 2.25E-6;
+		hx = 1.E-5;  //step for numerical derivative
 
 		//build an em guiding field.
 		fieldconfig = new GuidingFieldConfiguration<DIM>(config);
