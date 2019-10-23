@@ -17,6 +17,7 @@
 
 #include "implicit/guidingCenter/symplecticImplicit1.h"
 #include "implicit/guidingCenter/symplecticSemiexplicitQin.h"
+#include "implicit/guidingCenter/symplecticSemiexplicitQinRegularized.h"
 #include "implicit/guidingCenter/symplecticImplicit3D.h"
 #include "implicit/variationalMidpoint.h"
 
@@ -33,6 +34,7 @@ namespace Integrators{
 			else if (integratorName=="SymplecticExplicit4") return new SymplecticExplicit4<DIM>(config);
 			else if (integratorName=="SymplecticImplicit1") return new SymplecticImplicit1<DIM>(config);
 			else if (integratorName=="symplecticSemiexplicitQin") return new SemiexplicitQin<DIM>(config);
+			else if (integratorName=="symplecticSemiexplicitQinRegularized") return new SemiexplicitQinReg<DIM>(config);
 		}
 		else if (DIM==6){
 			if (integratorName=="SymplecticImplicit3D") return new SymplecticImplicit3D<DIM>(config);
