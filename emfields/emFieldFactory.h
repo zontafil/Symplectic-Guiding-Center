@@ -13,6 +13,7 @@
 #include "tokamak.h"
 #include "forcefree.h"
 #include "twoDimField.h"
+#include "tokamak_elmfire.h"
 
 using namespace std;
 
@@ -21,6 +22,7 @@ namespace EMFields{
 		if (fieldName=="Tokamak") return new Tokamak(config);
 		else if (fieldName=="ForceFree") return new ForceFree(config);
 		else if (fieldName=="TwoDimField") return new TwoDimField(config);
+		else if (fieldName=="TokamakElmfire") return new TokamakElmfire(config);
 
 		throw invalid_argument("Invalid EMField "+ fieldName);
 	}
