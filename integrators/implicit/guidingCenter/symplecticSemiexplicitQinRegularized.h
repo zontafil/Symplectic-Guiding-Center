@@ -28,7 +28,7 @@ namespace Integrators{
 
 		Matrix<double,DIM/2,1> dq = q.q1 - q.q0;
 
-		return (dq.dot(dq) / h +  0.5*(field1.Adag+field0.Adag).dot(q.q1.head(3)-q.q0.head(3)) - 0.5*h*q.q1(3)*q.q0(3) - h*mu*field0.Bnorm  );
+		return (0.5 * dq.dot(dq) / h +  0.5*(field1.Adag+field0.Adag).dot(q.q1.head(3)-q.q0.head(3)) - 0.5*h*q.q1(3)*q.q0(3) - h*mu*field0.Bnorm  );
 	}
 }
 
