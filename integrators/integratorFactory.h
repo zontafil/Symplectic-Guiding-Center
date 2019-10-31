@@ -13,6 +13,7 @@
 #include "explicit/guidingCenter/symplecticExplicit2.h"
 #include "explicit/guidingCenter/symplecticExplicit3.h"
 #include "explicit/guidingCenter/symplecticExplicit4.h"
+#include "explicit/guidingCenter/symplecticExplicit4_gaugeInvariant.h"
 #include "explicit/RK4.h"
 
 #include "implicit/guidingCenter/symplecticImplicit1.h"
@@ -35,6 +36,7 @@ namespace Integrators{
 			else if (integratorName=="SymplecticImplicit1") return new SymplecticImplicit1<DIM>(config);
 			else if (integratorName=="symplecticSemiexplicitQin") return new SemiexplicitQin<DIM>(config);
 			else if (integratorName=="symplecticSemiexplicitQinRegularized") return new SemiexplicitQinReg<DIM>(config);
+			else if (integratorName=="SymplecticExplicit4_GaugeInvariant") return new SymplecticExplicit4_GaugeFree<DIM>(config);
 		}
 		else if (DIM==6){
 			if (integratorName=="SymplecticImplicit3D") return new SymplecticImplicit3D<DIM>(config);
