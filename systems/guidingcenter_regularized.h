@@ -22,6 +22,7 @@ namespace Systems{
 			double mu;
 			double hx;
 			double h;
+			double kr; // regularization parameter
 		public:
 			GuidingCenterRegularized(Config::Config* config);
 			~GuidingCenterRegularized(){};
@@ -40,6 +41,7 @@ namespace Systems{
 		if ((DIM!=8) && (DIM!=6)) throw invalid_argument("Invalid Guiding Center dimension: please use 8 or 6");
 		mu = 2.25E-6;
 		hx = 1.E-5;  //step for numerical derivative
+		kr = 0.01;
 		this->h = config->h;
 
 		//build an em guiding field.
@@ -71,14 +73,7 @@ namespace Systems{
 		if (DIM==8){
 			//guiding center lagrangian
 			GuidingField field = this->fieldconfig->compute(q);
-			return (0.5 * v.dot(v) + field.Adag.dot(v.head(3)) - (0.5*q(3)*q(3)+mu*field.Bnorm));
-		}
-		else{
-			//guiding center lagrangian, 3D version. See parapraph 6.4.2
-			Matrix<double,3,1> v3D = v.head(3);
-			GuidingField field = this->fieldconfig->compute(q);
-			double u = field.b.dot(v3D);
-			return (field.A.dot(v3D) + 0.5*u*u - mu*field.Bnorm);
+			return (0.01 * v.dot(v) + field.Adag.dot(v.head(3)) - (0.5*q(3)*q(3)+mu*field.Bnorm));
 		}
 	}
 
