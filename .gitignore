@@ -12,3 +12,4 @@ build.sh
 symplecticIntegrator.cpp
 .vscode
 graphs/
+emfields/**/*.o
