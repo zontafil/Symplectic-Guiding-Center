@@ -9,11 +9,12 @@
 #define GUIDINGCENTER_REG_H
 #include "../utils/particleUtils.h"
 #include "../emfields/guidingfield.h"
+#include "../emfields/guidingfieldFactory.h"
 #include "./hamiltonianSystem.h"
 #include <stdexcept>
 
 using namespace Particles;
-using namespace GuidingFields;
+using namespace EMFields;
 
 namespace Systems{
 
@@ -45,7 +46,7 @@ namespace Systems{
 		this->h = config->h;
 
 		//build an em guiding field.
-		fieldconfig = new GuidingFieldConfiguration<DIM>(config);
+		fieldconfig = GuidingFieldFactory<DIM>(config->guidingFieldAlgorithm, config);
 	}
 
 	template<int DIM> Matrix<double,DIM/2,1> GuidingCenterRegularized<DIM>::momentum(PositionPoints<DIM> q){
