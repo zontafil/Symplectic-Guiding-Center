@@ -20,7 +20,7 @@ interp2D_data* eqdskPsiInterp(eqdsk eqdsk_data) {
 
     a5err err;
     if ((err = interp2Dexpl_init(ret, f, nr, nz, r_min, r_max, r_grid, z_min, z_max, z_grid))) {
-        throw "Interpolation error " + to_string(err);
+        throw invalid_argument("Invalid Hamiltonian system "+ to_string(err));
     }
 
     return ret;
@@ -35,7 +35,7 @@ interp1D_data* eqdskFpolInterp(eqdsk eqdsk_data) {
 
     int err;
     if ((err = interp1Dcomp_init(ret, f, n_r, r_min, r_max, r_grid))) {
-        throw "Interpolation 1D error " + to_string(err);
+        throw invalid_argument("Interpolation 1D error " + to_string(err));
     }
 
     return ret;
@@ -48,7 +48,7 @@ BdB_rz evalBrz(realnum r, realnum z, interp2D_data* interp2Dc, interp1D_data* in
     // interpolate psi, dpsi
     realnum psi_dpsi[6];
     if ((err = interp2Dexpl_eval_dB(psi_dpsi, interp2Dc, r, z))) {
-        throw "psi Eval error " + to_string(err);
+        throw invalid_argument("psi Eval error. Point outside interpolation region");
     }
 
 
@@ -68,7 +68,7 @@ BdB_rz evalBrz(realnum r, realnum z, interp2D_data* interp2Dc, interp1D_data* in
 
         realnum fpol_df[3];
         if ((err = interp1Dcomp_eval_dB(fpol_df, interp1Dc, psi))) {
-            throw "fpol Eval error " + to_string(err);
+            throw invalid_argument("fpol Eval error " + to_string(err));
         }
         fpol = fpol_df[0];
         dfpol_dpsi = fpol_df[1];
