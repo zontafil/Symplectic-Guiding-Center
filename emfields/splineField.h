@@ -46,7 +46,6 @@ namespace EMFields{
         interp2D_data* psi_spline_c = eqdskPsiInterp(eqdskObj);
         interp1D_data* fpol_spline_c = eqdskFpolInterp(eqdskObj);
 
-        // TODO
         Vector3d x = q.head(3);
         realnum r = sqrt(x[0]*x[0] + x[1]*x[1]);
 
@@ -73,6 +72,11 @@ namespace EMFields{
         gradB_cyl[2] = Bcyl.dot(Vector3d(BdB_cyl.dBR_dz, BdB_cyl.dBp_dz, BdB_cyl.dBz_dz));
         gradB_cyl /= Bnorm;
         ret.B_grad = cyl2cart(gradB_cyl, x);
+
+        free(psi_spline_c->c);
+        free(psi_spline_c);
+        free(fpol_spline_c->c);
+        free(fpol_spline_c);
 
         return ret;
     }
