@@ -55,6 +55,7 @@ namespace EMFields{
 
         ret.B = cyl2cart(Bcyl, x);
         ret.b = ret.B.normalized();
+        ret.Bnorm = ret.B.norm();
 
         // build curl B and Bdag
         Vector3d Bcurl_cyl;
@@ -62,15 +63,14 @@ namespace EMFields{
         Bcurl_cyl[1] = BdB_cyl.dBR_dz - BdB_cyl.dBz_dR;
         Bcurl_cyl[2] = Bcyl[1] / r + BdB_cyl.dBp_dR - BdB_cyl.dBp_dp / r;
         Vector3d Bcurl = cyl2cart(Bcurl_cyl, x);
-        ret.Bdag = ret.B + q[3] * Bcurl;
+        ret.Bdag = ret.B + q[3] * Bcurl / ret.Bnorm;
 
         // build grad|B|
-        realnum Bnorm = ret.B.norm();
         Vector3d gradB_cyl;
         gradB_cyl[0] = Bcyl.dot(Vector3d(BdB_cyl.dBR_dR, BdB_cyl.dBp_dR, BdB_cyl.dBz_dR));
         gradB_cyl[1] = Bcyl.dot(Vector3d(BdB_cyl.dBR_dp, BdB_cyl.dBp_dp, BdB_cyl.dBz_dp));
         gradB_cyl[2] = Bcyl.dot(Vector3d(BdB_cyl.dBR_dz, BdB_cyl.dBp_dz, BdB_cyl.dBz_dz));
-        gradB_cyl /= Bnorm;
+        gradB_cyl /= ret.Bnorm;
         ret.B_grad = cyl2cart(gradB_cyl, x);
 
         free(psi_spline_c->c);
