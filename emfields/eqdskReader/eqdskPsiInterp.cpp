@@ -3,6 +3,7 @@
 #include "../ascot5-spline/interp1Dcomp.h"
 #include <algorithm> 
 #include "./eqdskPsiInterp.h"
+#include <stdexcept>
 
 using namespace std;
 
