@@ -70,6 +70,9 @@ namespace Config{
 				double forcefree_kff; //perturbation magnitude
 				double forcefree_a;
 
+				// spline eqdsk specific
+				string eqdsk_file;
+
 			ConfigInterface(): h(0), debug_level("info") {};
 			~ConfigInterface(){};
 	};
