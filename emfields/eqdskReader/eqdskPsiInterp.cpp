@@ -57,6 +57,7 @@ BdB_rz evalBrz(realnum r, realnum z, interp2D_data* interp2Dc, interp1D_data* in
     realnum dpsi_dR = psi_dpsi[1];
     realnum dpsi_dz = psi_dpsi[2];
     realnum d2psi_dR2 = psi_dpsi[3];
+    realnum d2psi_dz2 = psi_dpsi[4];
     realnum d2psi_dRdz = psi_dpsi[5];
 
     // interpolate fpol, if inside the main plasma boundary
@@ -88,7 +89,7 @@ BdB_rz evalBrz(realnum r, realnum z, interp2D_data* interp2Dc, interp1D_data* in
     // evaluate the derivatives
     ret.dBR_dR = dpsi_dz/(r*r)-d2psi_dRdz/r;
     ret.dBR_dp = 0.;
-    ret.dBR_dz = -d2psi_dRdz/r;
+    ret.dBR_dz = -d2psi_dz2/r;
     ret.dBp_dR = -fpol/(r*r)+dfpol_dpsi*dpsi_dR/r;
     ret.dBp_dp = 0.;
     ret.dBp_dz = dfpol_dpsi*dpsi_dz/r;

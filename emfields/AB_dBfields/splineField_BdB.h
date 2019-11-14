@@ -67,7 +67,7 @@ namespace EMFields{
         // build grad|B| (cyl and cartesian)
         Vector3d gradB_cyl;
         gradB_cyl[0] = Bcyl.dot(Vector3d(BdB_cyl.dBR_dR, BdB_cyl.dBp_dR, BdB_cyl.dBz_dR));
-        gradB_cyl[1] = Bcyl.dot(Vector3d(BdB_cyl.dBR_dp, BdB_cyl.dBp_dp, BdB_cyl.dBz_dp));
+        gradB_cyl[1] = Bcyl.dot(Vector3d(BdB_cyl.dBR_dp, BdB_cyl.dBp_dp, BdB_cyl.dBz_dp)) / r;
         gradB_cyl[2] = Bcyl.dot(Vector3d(BdB_cyl.dBR_dz, BdB_cyl.dBp_dz, BdB_cyl.dBz_dz));
         gradB_cyl /= ret.Bnorm;
         ret.B_grad = cyl2cart(gradB_cyl, x);
