@@ -1,11 +1,11 @@
 #ifndef SPLINEFIELD_H
 #define SPLINEFIELD_H
 
-#include "guidingfield.h"
+#include "../AB_dB_Field.h"
 #include <stdexcept>
-#include "./eqdskReader/eqdskReader.h"
-#include "./eqdskReader/eqdskPsiInterp.h"
-#include "ascot5-spline/common_spline.h"
+#include "../eqdskReader/eqdskReader.h"
+#include "../eqdskReader/eqdskPsiInterp.h"
+#include "../ascot5-spline/common_spline.h"
 
 namespace EMFields{
 
@@ -18,15 +18,15 @@ namespace EMFields{
         return ret;
     }
 
-	template <int DIM> class SplineField: public GuidingFieldConfiguration<DIM>
+	template <int DIM> class SplineField_BdB: public AB_dB_FieldBuilder<DIM>
 	{
         private:
             eqdsk eqdskObj;
             interp2D_data* psi_spline_c;
             interp1D_data* fpol_spline_c;
 		public:
-			SplineField(Config::Config* config);
-			~SplineField(){
+			SplineField_BdB(Config::Config* config);
+			~SplineField_BdB(){
                 free(psi_spline_c->c);
                 free(psi_spline_c);
                 free(fpol_spline_c->c);
@@ -37,7 +37,7 @@ namespace EMFields{
 			GuidingField compute(Matrix<double,DIM/2,1> q);
 	};
 
-	template <int DIM> SplineField<DIM>::SplineField(Config::Config* config): GuidingFieldConfiguration<DIM>(config) {
+	template <int DIM> SplineField_BdB<DIM>::SplineField_BdB(Config::Config* config): AB_dB_FieldBuilder<DIM>(config) {
         if (config->eqdsk_file.empty()) {
             throw invalid_argument("EQDSK input file unset. Set config->eqdsk_file");
         }
@@ -49,7 +49,7 @@ namespace EMFields{
         cout << "EQDSK: range z: " << eqdskObj.z_min << " " << eqdskObj.z_max << endl;
 	};
 
-    template <int DIM> GuidingField SplineField<DIM>::compute(Matrix<double,DIM/2,1> q){
+    template <int DIM> GuidingField SplineField_BdB<DIM>::compute(Matrix<double,DIM/2,1> q){
         GuidingField ret;
 
         Vector3d x = q.head(3);

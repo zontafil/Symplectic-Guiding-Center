@@ -8,8 +8,8 @@
 #ifndef GUIDINGCENTER_REG_H
 #define GUIDINGCENTER_REG_H
 #include "../utils/particleUtils.h"
-#include "../emfields/guidingfield.h"
-#include "../emfields/guidingfieldFactory.h"
+#include "../emfields/AB_dB_Field.h"
+#include "../emfields/AB_dB_FieldFactory.h"
 #include "./hamiltonianSystem.h"
 #include <stdexcept>
 
@@ -33,7 +33,7 @@ namespace Systems{
 			Matrix<double,DIM/2,1> momentum(PositionPoints<DIM> q);
 			Matrix<double,DIM,1> f_eq_motion(Matrix<double,DIM,1> z);
 
-			GuidingFieldConfiguration<DIM> *fieldconfig;
+			AB_dB_FieldBuilder<DIM> *fieldconfig;
 
 	};
 
@@ -46,7 +46,7 @@ namespace Systems{
 		this->h = config->h;
 
 		//build an em guiding field.
-		fieldconfig = GuidingFieldFactory<DIM>(config->guidingFieldAlgorithm, config);
+		fieldconfig = AB_dB_FieldFactory<DIM>(config->guidingFieldAlgorithm, config);
 	}
 
 	template<int DIM> Matrix<double,DIM/2,1> GuidingCenterRegularized<DIM>::momentum(PositionPoints<DIM> q){

@@ -4,8 +4,8 @@
 #ifndef GUIDINGFIELD_H
 #define GUIDINGFIELD_H
 
-#include "emField.h"
-#include "emFieldFactory.h"
+#include "ABfields/emField.h"
+#include "ABfields/emFieldFactory.h"
 #include <stdexcept>
 
 namespace EMFields{
@@ -17,17 +17,17 @@ namespace EMFields{
 		double Bnorm, phi;
 	};
 
-	template <int DIM> class GuidingFieldConfiguration
+	template <int DIM> class AB_dB_FieldBuilder
 	{
 		public:
-			GuidingFieldConfiguration(Config::Config* config);
-			~GuidingFieldConfiguration(){};
+			AB_dB_FieldBuilder(Config::Config* config);
+			~AB_dB_FieldBuilder(){};
 
 			//compute the field from q
 			virtual GuidingField compute(Matrix<double,DIM/2,1> q) = 0;
 	};
 
-	template <int DIM> GuidingFieldConfiguration<DIM>::GuidingFieldConfiguration(Config::Config* config) {
+	template <int DIM> AB_dB_FieldBuilder<DIM>::AB_dB_FieldBuilder(Config::Config* config) {
 		if ((DIM!=8) && (DIM!=6)) throw invalid_argument("Dimension must be 8 or 6 for the GuidingFieldConfiguration");
 	};
 

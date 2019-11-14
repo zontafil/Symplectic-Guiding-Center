@@ -4,12 +4,12 @@
 #ifndef FINITEDFROMAB_H
 #define FINITEDFROMAB_H
 
-#include "guidingfield.h"
+#include "../AB_dB_Field.h"
 #include <stdexcept>
 
 namespace EMFields{
 
-	template <int DIM> class FiniteDFromAB: public GuidingFieldConfiguration<DIM>
+	template <int DIM> class FiniteDFromAB: public AB_dB_FieldBuilder<DIM>
 	{
 		private:
 			Vector3d B_grad(Vector3d x);
@@ -27,7 +27,7 @@ namespace EMFields{
 			GuidingField compute(Matrix<double,DIM/2,1> q);
 	};
 
-	template <int DIM> FiniteDFromAB<DIM>::FiniteDFromAB(Config::Config* config): GuidingFieldConfiguration<DIM>(config) {
+	template <int DIM> FiniteDFromAB<DIM>::FiniteDFromAB(Config::Config* config): AB_dB_FieldBuilder<DIM>(config) {
 		mu = 2.25E-6;
 		hx = 1.E-5;
 
