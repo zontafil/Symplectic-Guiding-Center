@@ -46,7 +46,7 @@ namespace Systems{
 		this->h = config->h;
 
 		//build an em guiding field.
-		fieldconfig = AB_dB_FieldFactory<DIM>(config->guidingFieldAlgorithm, config);
+		fieldconfig = AB_dB_FieldFactory<DIM>(config->AB_dB_Algorithm, config);
 	}
 
 	template<int DIM> Matrix<double,DIM/2,1> GuidingCenterRegularized<DIM>::momentum(PositionPoints<DIM> q){

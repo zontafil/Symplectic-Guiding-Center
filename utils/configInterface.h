@@ -58,7 +58,7 @@ namespace Config{
 				//EM field.
 				//See "emfields/emFieldFactory.h" for a full list.
 				string emField;
-				string guidingFieldAlgorithm;
+				string AB_dB_Algorithm;
 
 				double mu;
 

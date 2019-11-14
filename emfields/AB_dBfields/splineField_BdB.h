@@ -6,17 +6,9 @@
 #include "../eqdskReader/eqdskReader.h"
 #include "../eqdskReader/eqdskPsiInterp.h"
 #include "../ascot5-spline/common_spline.h"
+#include "../utils/coordinatesUtils.h"
 
 namespace EMFields{
-
-    Vector3d cyl2cart(Vector3d v, Vector3d x) {
-        realnum r = sqrt(x[0]*x[0] + x[1]*x[1]);
-        Vector3d ret;
-        ret[0] = (v[0]*x[0] - v[1]*x[1]) / r;
-        ret[1] = (v[0]*x[1] + v[1]*x[0]) / r;
-        ret[2] = v[2];
-        return ret;
-    }
 
 	template <int DIM> class SplineField_BdB: public AB_dB_FieldBuilder<DIM>
 	{

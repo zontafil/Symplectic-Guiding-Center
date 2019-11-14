@@ -14,6 +14,7 @@
 #include "forcefree.h"
 #include "twoDimField.h"
 #include "tokamak_elmfire.h"
+#include "splineField_B.h"
 
 using namespace std;
 
@@ -23,6 +24,7 @@ namespace EMFields{
 		else if (fieldName=="ForceFree") return new ForceFree(config);
 		else if (fieldName=="TwoDimField") return new TwoDimField(config);
 		else if (fieldName=="TokamakElmfire") return new TokamakElmfire(config);
+		else if (fieldName=="splineFieldB") return new SplineField_B(config);
 
 		throw invalid_argument("Invalid EMField "+ fieldName);
 	}

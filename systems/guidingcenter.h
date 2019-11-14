@@ -42,7 +42,7 @@ namespace Systems{
 		hx = 1.E-5;  //step for numerical derivative
 
 		//build an em guiding field.
-		fieldconfig = AB_dB_FieldFactory<DIM>(config->guidingFieldAlgorithm, config);
+		fieldconfig = AB_dB_FieldFactory<DIM>(config->AB_dB_Algorithm, config);
 	}
 
 	template<int DIM> Matrix<double,DIM/2,1> GuidingCenter<DIM>::momentum(PositionPoints<DIM> q){

@@ -13,7 +13,7 @@ namespace EMFields{
 		if (fieldName=="finiteDFromAB") return new FiniteDFromAB<DIM>(config);
 		else if (fieldName=="splineField") return new SplineField_BdB<DIM>(config);
 
-		throw invalid_argument("Invalid Guiding Field Algorithm (config->guidingFieldAlgorithm). Choices: finiteDFromAB");
+		throw invalid_argument("Invalid Guiding Field Algorithm (config->AB_dB_Algorithm). Choices: finiteDFromAB");
 	}
 }
 
