@@ -12,7 +12,7 @@ namespace EMFields{
 
 	//output type of computation
 	struct GuidingField{
-		Matrix<double,3,1> B, A, Adag, phi_grad, b, Bdag, B_grad;
+		Matrix<double,3,1> B, A, Adag, phi_grad, b, Bdag, B_grad, GradB_cyl, Bcyl;
 		Matrix<double,3,3> Adag_jac, B_hessian, b_jac;
 		double Bnorm, phi;
 	};

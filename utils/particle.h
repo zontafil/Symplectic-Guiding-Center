@@ -124,6 +124,7 @@ namespace Particles{
 	template <int DIM> void Particle<DIM>::buildConservedQuantities(){
 		//get conserved quantities for timestep 1, save and compute errors
 		conservedQuantities1 = integrator->system->getConservedQuantities(get_z());
+		conservedQuantities_err1 = new vector<double>(conservedQuantities1->size());
 		for (unsigned int i=0;i<conservedQuantities1->size(); i++){
 			conservedQuantities_err1->at(i)= ( conservedQuantities1->at(i)- conservedQuantities_init->at(i)) / conservedQuantities_init->at(i);
 		}

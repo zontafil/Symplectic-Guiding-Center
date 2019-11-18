@@ -29,7 +29,8 @@ using namespace Particles;
 
 void setPrintPrecision(int print_precision, ofstream& out);
 void printToFile(int t,Config::Config* config, Particle<Config::DIM>* particle, ofstream& out);
-void setDebugLevel(Config::Config* config);
+void setDebugLevel(Config::Config* config, bool debug_override);
+void toggleDebugLevel(bool set);
 
 int main(int argc, char* argv[]){
 
@@ -41,7 +42,7 @@ int main(int argc, char* argv[]){
     if (!out.is_open()) throw invalid_argument("Can't open output file for write");
 
     //set debug level and print precision
-    setDebugLevel(config);
+    setDebugLevel(config, false);
     setPrintPrecision(config->print_precision,out);
 
     //create a particle
@@ -71,17 +72,22 @@ int main(int argc, char* argv[]){
         //PRINT TO SCREEN FIRST STEP
         if (t==1) cout << "z1:\t" << particle->z1.transpose() << endl;
 
-        //EXIT IF THE ERROR IS TOO HIGH (ASSUMING ENERGY IS THE FIRST CONSERVED QUANTITY)
-        if (config->exit_on_error){
-            vector<double>* conservedQuantitiesError = particle->conservedQuantities_err1;
-            if ((conservedQuantitiesError->size()>0) && (abs(conservedQuantitiesError->at(0))>config->error_threshold)){
-              cout << "Timestep: " << t << "\tError too high! Exiting." << endl;
-              break;
-            }
-        } 
 
         //PRINT TO FILE
         if (((t+config->print_timestep_offset)%config->file_timestep_mult)==0) printToFile(t,config,particle, out);
+
+        //EXIT IF THE ERROR IS TOO HIGH (ASSUMING ENERGY IS THE FIRST CONSERVED QUANTITY)
+        if (config->exit_on_error){
+            vector<double>* conservedQuantitiesError = particle->conservedQuantities_err1;
+
+            if (conservedQuantitiesError->size()>0) {
+                if (abs(conservedQuantitiesError->at(0))>config->error_threshold){
+                    cout << "Timestep: " << t << "\tError too high! Exiting." << endl;
+                    break;
+                }
+            }
+
+        } 
     }
   
     return 0;
@@ -98,8 +104,9 @@ void setPrintPrecision(int print_precision, ofstream& out){
 void printToFile(int t,Config::Config* config, Particle<Config::DIM>* particle, ofstream& out){
     out 
         << (t) << " " 
-        << (t)/config->orbit_normalize << " " 
-        << particle->z1.transpose() << " ";
+        << (t)/config->orbit_normalize << " "
+        << particle->z1.transpose() << " "
+        << sqrt(particle->z1[0]*particle->z1[0] + particle->z1[1]*particle->z1[1]) << " ";
 
     vector<double>* conservedQuantitiesError = particle->conservedQuantities_err1;
     for (unsigned int i=0; i< conservedQuantitiesError->size(); i++){
@@ -109,8 +116,21 @@ void printToFile(int t,Config::Config* config, Particle<Config::DIM>* particle, 
 
 }
 
-void setDebugLevel(Config::Config* config){
+void setDebugLevel(Config::Config* config, bool debug_override){
    boost::log::add_console_log(std::cout, boost::log::keywords::format = ">> %Message%");
-   if (config->debug_level=="debug")  boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::debug);
-   else boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::info);
+   if ((config->debug_level=="debug") || (debug_override)) {
+       boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::trace);
+   }
+   else {
+       boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::info);
+   }
+}
+
+void toggleDebugLevel(bool set) {
+    if (set) {
+        boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::trace);
+    }
+    else {
+        boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::info);
+    }
 }

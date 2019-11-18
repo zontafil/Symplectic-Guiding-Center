@@ -17,7 +17,7 @@ namespace EMFields{
 		private:
             eqdsk eqdskObj;
             interp2D_data* psi_spline_c;
-            interp1D_data* fpol_spline_c;
+            Spline1D fpol_spline;
 		public:
 			SplineField_B(Config::Config* config);
 			~SplineField_B(){};
@@ -32,7 +32,7 @@ namespace EMFields{
         }
         eqdskObj = readEqdskFile(config->eqdsk_file);
         psi_spline_c = eqdskPsiInterp(eqdskObj);
-        fpol_spline_c = eqdskFpolInterp(eqdskObj);
+        fpol_spline = eqdskFpolInterpEigen(eqdskObj);
 
         cout << "EQDSK: range r: " << eqdskObj.r_min << " " << eqdskObj.r_max << endl;
         cout << "EQDSK: range z: " << eqdskObj.z_min << " " << eqdskObj.z_max << endl;
@@ -46,7 +46,7 @@ namespace EMFields{
         realnum r = sqrt(x[0]*x[0] + x[1]*x[1]);
 
         // compute B, dB in cyl coordinates
-        BdB_rz BdB_cyl = evalBrz(r, x[2], psi_spline_c, fpol_spline_c, eqdskObj);
+        BdB_rz BdB_cyl = evalBrz(r, x[2], psi_spline_c, fpol_spline, eqdskObj);
         Vector3d Bcyl(BdB_cyl.BR, BdB_cyl.Bp, BdB_cyl.Bz);
 
         // build B, B and |B| (cartesian)
