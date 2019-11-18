@@ -10,6 +10,8 @@ using namespace Particles;
 namespace Integrators{
 	template <int DIM> class SymplecticExplicit4 : public VariationalIntegrator<DIM>
 	{
+		private:
+			bool d2B_regularization;
 		public:
 			SymplecticExplicit4(Config::Config* config);
 			~SymplecticExplicit4(){};
@@ -28,6 +30,7 @@ namespace Integrators{
 		if (DIM!=8) throw invalid_argument("Invalid dimension for symplectic explicit 4: please use 8.");
 		system = guidingcenterFactory<DIM>(config->system,config);		
 		mu = config->mu;
+		d2B_regularization = config->d2B_regularization;
 	}
 
 	template <int DIM> PositionMomentumPoint<DIM> SymplecticExplicit4<DIM>::LegendreRight(PositionPoints<DIM> q, double h){
@@ -56,7 +59,9 @@ namespace Integrators{
 
 		Matrix<double,DIM/2,DIM/2> grad2h;
 		grad2h.setZero();
-		grad2h.block(0,0,3,3) = mu*field.B_hessian.block(0,0,3,3);
+		if (d2B_regularization) {
+			grad2h.block(0,0,3,3) = mu*field.B_hessian.block(0,0,3,3);
+		}
 		grad2h(3,3) = 1.;
 		M += h/2.*grad2h;
 
@@ -97,7 +102,9 @@ namespace Integrators{
 
 		Matrix<double,DIM/2,DIM/2> grad2h;
 		grad2h.setZero();
-		grad2h.block(0,0,3,3) = mu*field.B_hessian.block(0,0,3,3);
+		if (d2B_regularization) {
+			grad2h.block(0,0,3,3) = mu*field.B_hessian.block(0,0,3,3);
+		}
 		grad2h(3,3) = 1.;
 		M -= h/2.*grad2h;
 

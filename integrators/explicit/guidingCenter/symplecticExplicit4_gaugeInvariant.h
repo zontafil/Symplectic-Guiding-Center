@@ -12,6 +12,8 @@ using namespace Particles;
 namespace Integrators{
 	template <int DIM> class SymplecticExplicit4_GaugeFree : public VariationalIntegrator<DIM>
 	{
+		private:
+			bool d2B_regularization;
 		public:
 			SymplecticExplicit4_GaugeFree(Config::Config* config);
 			~SymplecticExplicit4_GaugeFree(){};
@@ -30,6 +32,7 @@ namespace Integrators{
 		if (DIM!=8) throw invalid_argument("Invalid dimension for symplectic explicit 4: please use 8.");
 		system = guidingcenterFactory<DIM>(config->system,config);		
 		mu = config->mu;
+		d2B_regularization = config->d2B_regularization;
 	}
 
 	template <int DIM> PositionMomentumPoint<DIM> SymplecticExplicit4_GaugeFree<DIM>::LegendreRight(PositionPoints<DIM> q, double h){
@@ -58,7 +61,9 @@ namespace Integrators{
 
 		Matrix<double,DIM/2,DIM/2> grad2h;
 		grad2h.setZero();
-		grad2h.block(0,0,3,3) = mu*field.B_hessian.block(0,0,3,3);
+		if (d2B_regularization) {
+			grad2h.block(0,0,3,3) = mu*field.B_hessian.block(0,0,3,3);
+		}
 		grad2h(3,3) = 1.;
 		M += h/2.*grad2h;
 
@@ -99,7 +104,9 @@ namespace Integrators{
 
 		Matrix<double,DIM/2,DIM/2> grad2h;
 		grad2h.setZero();
-		grad2h.block(0,0,3,3) = mu*field.B_hessian.block(0,0,3,3);
+		if (d2B_regularization) {
+			grad2h.block(0,0,3,3) = mu*field.B_hessian.block(0,0,3,3);
+		}
 		grad2h(3,3) = 1.;
 		M -= h/2.*grad2h;
 
@@ -114,6 +121,14 @@ namespace Integrators{
 		q.q0 = z.q;
 		q.q1.head(3) = (q.q0.head(3)+Q.head(3));
 		q.q1(3) = (q.q0(3)+Q(3));
+
+		BOOST_LOG_TRIVIAL(trace) << std::scientific << "b:\t\t" << field.b.transpose();
+		BOOST_LOG_TRIVIAL(trace) << std::scientific << "b:\t\t" << field.B.transpose();
+		BOOST_LOG_TRIVIAL(trace) << std::scientific << "Bdag:\t" << field.Bdag.transpose();
+		BOOST_LOG_TRIVIAL(trace) << std::scientific << "Bgrad:\t" << field.B_grad.transpose();
+		BOOST_LOG_TRIVIAL(trace) << std::scientific << "u*u/2:\t" << (z.q[3]*z.q[3])/2.0;
+		BOOST_LOG_TRIVIAL(trace) << std::scientific << "mu*|B|:\t" << mu*field.B.norm();
+		BOOST_LOG_TRIVIAL(trace) << std::scientific << "mu*|B|:\t" << (z.q[3]*z.q[3])/2.0 + mu*field.B.norm();
 
 		return q;
 	}

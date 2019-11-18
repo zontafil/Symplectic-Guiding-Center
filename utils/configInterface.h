@@ -65,6 +65,9 @@ namespace Config{
 				//u0 for guiding center implicit 2 (3D)
 				double guidingcenter3D_u0;
 
+				// guidingcenter explicit 4 specific
+				bool d2B_regularization;
+
 				//force free specific
 				bool forcefree_pert;
 				double forcefree_kff; //perturbation magnitude
