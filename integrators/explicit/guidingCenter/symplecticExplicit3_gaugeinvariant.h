@@ -65,7 +65,7 @@ namespace Integrators{
 		Q = M*dq;
 
 		z.q = q.q1;
-		z.p.head(3) = Q.head(3) + field.Adag -h/2.*mu*field.B_grad;
+		z.p.head(3) = Q.head(3) -h/2.*mu*field.B_grad;
 		z.p(3) = Q(3) -h/2.*q.q1(3);
 
 		return z;
@@ -102,7 +102,7 @@ namespace Integrators{
 		M/=2.;
 
 		// //BUILD W
-		W.head(3) = h/2.*(mu*field.B_grad) +field.Adag - z.p.head(3);
+		W.head(3) = h/2.*(mu*field.B_grad) - z.p.head(3);
 		W(3) = (h/2.*z.q(3) -z.p(3));
 
 		Q = M.inverse()*W;
