@@ -44,6 +44,9 @@ Spline1D eqdskFpolInterpEigen(eqdsk eqdsk_data) {
 int eqdskFpolEvalEigen(realnum *fdf, eqdsk eqdsk_data, Spline1D spline, realnum psi) {
     realnum r_min = eqdsk_data.simag;
     realnum r_max = eqdsk_data.sibry;
+    if ((psi > r_max) || (psi < r_min)) {
+        cout << "WARNING: psi outside region " << endl;
+    }
     realnum psi_normalized = (psi - r_min) / (r_max - r_min) * double(eqdsk_data.nr);
 
     const auto eval = spline.derivatives(psi_normalized, 2);
@@ -61,7 +64,7 @@ BdB_rz evalBrz(realnum r, realnum z, interp2D_data* interp2Dc, Spline1D splineFp
     BdB_rz ret;
 
     // interpolate psi, dpsi
-    realnum psi_dpsi[6];
+    realnum psi_dpsi[6] = {0,0,0,0,0,0};
     if ((err = interp2Dexpl_eval_dB(psi_dpsi, interp2Dc, r, z))) {
         throw invalid_argument("psi Eval error. Point outside interpolation region");
     }
