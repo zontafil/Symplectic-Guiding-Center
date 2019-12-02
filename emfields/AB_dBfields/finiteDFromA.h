@@ -1,0 +1,142 @@
+//Guiding Field Configuration.
+// Expose useful guiding center quantities starting from a EM field
+// i.e. gradient of B, A_dagger etc (see GuidingField struct)
+#ifndef FINITEDFROMA_H
+#define FINITEDFROMA_H
+
+#include "../AB_dB_Field.h"
+#include <stdexcept>
+
+namespace EMFields{
+
+	template <int DIM> class FiniteDFromA: public AB_dB_FieldBuilder<DIM>
+	{
+		private:
+			Vector3d B_grad(Vector3d x);
+			Vector3d B(Vector3d x);
+			Matrix<double,3,3> B_hessian(Vector3d x);
+			double mu;
+			double hx;  //step for numerical derivative
+			EMField* field;
+		public:
+			FiniteDFromA(Config::Config* config);
+			~FiniteDFromA(){};
+
+			//compute the field from q
+			// q is (x,u) for 8D, (x) for 6D
+			// if the dimension is 6, some quantities, like A_dagger are not computed
+			GuidingField compute(Matrix<double,DIM/2,1> q);
+	};
+
+	template <int DIM> FiniteDFromA<DIM>::FiniteDFromA(Config::Config* config): AB_dB_FieldBuilder<DIM>(config) {
+		mu = 2.25E-6;
+		hx = 1.E-5;
+
+		field = EMFieldFactory(config->emField,config);
+	};
+
+	template <int DIM> Vector3d FiniteDFromA<DIM>::B_grad(Vector3d x){
+		Vector3d dx(hx,hx,hx); //dx := (dx,dy,dz)
+		Vector3d ret;
+		Vector3d x0,x1;
+		for (int j=0;j<3;j++){
+		  x0 = x1 = x;
+		  x0(j)-=dx(j);
+		  x1(j)+=dx(j);
+		  ret(j) = 0.5*(field->B(x1).norm() - field->B(x0).norm())/dx(j);
+		}
+		return ret;
+	}
+	
+	template <int DIM> Matrix<double,3,3> FiniteDFromA<DIM>::B_hessian(Vector3d x){
+		// COMPUTE B_HESSIAN
+		Vector3d dx(hx,hx,hx); //dx := (dx,dy,dz)
+		Matrix<double,3,3> ret;
+		Vector3d x0,x1;
+		for (int j=0;j<3;j++){
+		  x0 = x1 = x;
+		  x0(j)-=dx(j);
+		  x1(j)+=dx(j);
+		  ret.col(j) = 0.5*(B_grad(x1) - B_grad(x0))/dx(j);
+		}
+
+		return ret;
+	}
+
+	template <int DIM> Vector3d FiniteDFromA<DIM>::B(Vector3d x){
+		// compute B from A
+		Matrix3d A_jac;
+		Vector3d x0, x1, B;
+		for (int j=0;j<3;j++){
+			x0 = x1 = x;
+			x0(j)-=hx;
+			x1(j)+=hx;
+			A_jac.col(j) = 0.5*(field->A(x1) - field->A(x0))/hx;
+		}
+		B(0) = A_jac(2,1) - A_jac(1,2);
+		B(1) = A_jac(0,2) - A_jac(2,0);
+		B(2) = A_jac(1,0) - A_jac(0,1);
+		// cout << B.transpose() << endl;
+		return B;
+	}
+
+	template <int DIM> GuidingField FiniteDFromA<DIM>::compute(Matrix<double,DIM/2,1> q){
+		//TODO: implement phi
+
+		BOOST_LOG_TRIVIAL(trace) << "Computing Magnetic field";
+		BOOST_LOG_TRIVIAL(trace) << std::scientific << "q:\t\t" << q.transpose();
+		
+		GuidingField ret;
+		Vector3d x = q.head(3);
+
+		ret.A = field->A(x);
+		ret.B = B(x);
+		ret.Bnorm = ret.B.norm();
+		ret.b = ret.B.normalized();
+
+		double u;
+		if (DIM==8) {
+			u = q(3);
+			ret.Adag = ret.A + u*ret.b;
+		}
+		else {
+			ret.Adag.setZero();
+			ret.Bdag.setZero();
+			ret.Adag_jac.setZero();
+		}
+
+		Vector3d B0,x0,x1,B1;
+
+		//COMPUTE GRADIENT(B),GRADIENT(phi),JAC(A_dagger)
+		Matrix3d A_jac;
+		for (int j=0;j<3;j++){
+		  x0 = x1 = x;
+		  x0(j)-=hx;
+		  x1(j)+=hx;
+		  B0 = field->B(x0);
+		  B1 = field->B(x1);
+		  
+		  if (DIM==8) ret.Adag_jac.col(j) = 0.5*(field->A(x1) + u*B1.normalized() - field->A(x0)-u*B0.normalized())/hx;
+		  A_jac.col(j) = 0.5*(field->A(x1) - field->A(x0))/hx;
+		  ret.B_grad(j) = 0.5*(B1.norm() - B0.norm())/hx;
+		  ret.b_jac.col(j) = 0.5*(B1.normalized() - B0.normalized())/hx;
+		}
+
+		//COMPUTE B_dagger
+		if (DIM==8){
+			ret.Bdag = ret.B;
+			ret.Bdag(0) += u*(ret.b_jac(2,1)-ret.b_jac(1,2));
+			ret.Bdag(1) += u*(ret.b_jac(0,2)-ret.b_jac(2,0));
+			ret.Bdag(2) += u*(ret.b_jac(1,0)-ret.b_jac(0,1));		
+		}
+
+		ret.B_hessian = B_hessian(x);
+
+		BOOST_LOG_TRIVIAL(trace) << std::scientific << "B:\t\t" << ret.B.transpose();
+		BOOST_LOG_TRIVIAL(trace) << std::scientific << "A:\t\t" << ret.A.transpose();
+
+		return ret;
+	}
+}
+
+#endif
